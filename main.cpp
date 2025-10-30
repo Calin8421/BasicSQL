@@ -36,6 +36,35 @@ int commander()
 
 }
 
+class row
+{
+	std::string name;
+	std::string type;
+	std::string size;
+	std::string defaultValue;
+
+};
+
+class rowData
+{
+public:
+	enum class dataTypes { TEXT, INTEGER, FLOAT };
+private:
+	std::string name;
+	int capacity;
+	int rowIndex;
+	dataTypes type;
+
+};
+
+
+
+class Table
+{
+	std::string tableName;
+	
+};
+
 void main()
 {
 	//std::cout << "SQL Engine here";
