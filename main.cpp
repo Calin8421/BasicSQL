@@ -47,14 +47,63 @@ class row
 
 class rowData
 {
-public:
-	enum class dataTypes { TEXT, INTEGER, FLOAT };
 private:
-	std::string name;
-	int capacity;
-	int rowIndex;
-	dataTypes type;
+	int textIndex = 0;
+	int integerIndex = 0;
+	int floatIndex = 0;
+	int textCap = 0;
+	int integerCap = 0;
+	int floatCap = 0;
+	std::string* textData=nullptr;
+	int* integerData = nullptr;
+	float* floatData = nullptr;
+public:
+	void setText(std::string data)
+	{
+		if (textIndex < textCap)
+		{
+			textData[textIndex] = data;
+			textIndex++;
+		}
+	}
 
+	void setInt(int data)
+	{
+		if (integerIndex < integerCap)
+		{
+			integerData[integerIndex] = data;
+			integerIndex++;
+		}
+	}
+
+	void setFloat(float data)
+	{
+		if (floatIndex < floatCap)
+		{
+			floatData[floatIndex] = data;
+			floatIndex++;
+		}
+	}
+
+	rowData(int textCap,int integerCap,int floatCap)
+	{
+		this->textCap = textCap;
+		this->integerCap = integerCap;
+		this->floatCap = floatCap;
+		if (this->textCap > 0) textData = new std::string[this->textCap];
+		if (this->integerCap > 0) integerData = new int[this->integerCap];
+		if (this->floatCap > 0) floatData = new float[this->floatCap];
+	}
+
+	~rowData()
+	{
+		delete[] textData;
+		delete[] integerData;
+		delete[] floatData;
+		textData = nullptr;
+		integerData = nullptr;
+		floatData = nullptr;
+	}
 };
 
 
