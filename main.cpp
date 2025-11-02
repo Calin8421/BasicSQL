@@ -36,15 +36,6 @@ int commander()
 
 }
 
-class row
-{
-	std::string name;
-	std::string type;
-	std::string size;
-	std::string defaultValue;
-
-};
-
 class rowData
 {
 private:
@@ -106,11 +97,17 @@ public:
 	}
 };
 
-
-
 class Table
 {
-	std::string tableName;
+ public:
+	enum order { TEXT = 1, INTEGER = 2, FLOAT = 3 };
+private:
+	std::string tableName="";
+	order* typesOrder = nullptr;
+	std::string* attributeNames = nullptr;
+	int totalCount = 0, textCount = 0, integerCount = 0, floatCount = 0;
+	rowData* data = nullptr;
+public:
 	
 };
 
