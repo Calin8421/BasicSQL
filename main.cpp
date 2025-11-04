@@ -4,8 +4,36 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <regex>
+#include<vector>
 
+void returnFirst(std::string instruction, const char delimiter, std::string& result)
+{
+	int i = instruction.find(delimiter);
+	if (i != -1)
+	{
+		result = instruction.substr(0, i);
+	}
+	else result = "-";
+}
 
+std::string cut(std::string& instruction, int n)
+{
+	return instruction.substr(n);
+}
+
+std::string removeCharacters(std::string instruction, char character)
+{
+	std::string result = "";
+	for (int i = 0; i < instruction.length(); i++)
+	{
+		if (instruction[i] != character)
+		{
+			result += instruction[i];
+		}
+	}
+	return result;
+}
 
 
 class rowData
@@ -76,7 +104,6 @@ private:
 };
 Table* tables = nullptr;
 
-
 int DELETE(std::string instruction)
 {
 	std::cout << "Data deleted" << std::endl;
@@ -115,8 +142,48 @@ int UPDATE(std::string instruction)
 }
 int CREATE(std::string instruction)
 {
-	std::cout << "Table was created!" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	std::string originalInstruction=instruction;
+	std::string result = "", name = "", type = "", size = "", default_value = "";
+	std::string tableName = "";
+	char delimiter = ' ';
+	int willNeverBeUsedAgain = -1;
+	for (char& c : originalInstruction)
+	{
+		c = std::toupper(c);
+	}
+	instruction = originalInstruction;
+	willNeverBeUsedAgain = instruction.find("table") + sizeof("table") + 1;
+	instruction = cut(instruction, willNeverBeUsedAgain);
+	returnFirst(instruction, '(', result);
+	tableName = result;
+	result = removeCharacters(result, 'N');
+	instruction = cut(instruction, result.length());
+	std::cout << tableName << std::endl;
+	while (instruction != ")")
+	{
+		returnFirst(instruction, ')', result);
+		instruction = cut(instruction, result.length() + 1);
+		result = cut(result, 1);
+		returnFirst(result, ',', name);
+		result = cut(result, name.length());
+		name = removeCharacters(name, '(');
+		name = removeCharacters(name, ' ');
+		result = cut(result, 1);
+		returnFirst(result, ',', type);
+		result = cut(result, type.length() + 1);
+		type = removeCharacters(type, ',');
+		type = removeCharacters(type, ' ');
+		returnFirst(result, ',', size);
+		result = cut(result, size.length());
+		size = removeCharacters(size, ',');
+		size = removeCharacters(size, ' ');
+		returnFirst(result, ')', default_value);
+		result = cut(result, default_value.length());
+		default_value = removeCharacters(default_value, ')');
+		default_value = removeCharacters(default_value, ' ');
+		std::cout << name << "||" << type << "||" << size << "||" << result << "||" << std::endl;
+		//WE HAVE TO SEND EACH DETAIL ABOUT THE ATTRIBUTE INTO THE INSERT FUNCTION TO CREATE A NEW COLUMN
+	}
 	return 0;
 }
 

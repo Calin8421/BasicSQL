@@ -1,3 +1,11 @@
 ﻿  main.cpp
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(204,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
-  BasicSQL.vcxproj -> F:\ASE\YEAR2\POO\Projects\BasicSQL\x64\Debug\BasicSQL.exe
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(12,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(155,69): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(160,46): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(165,50): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(168,35): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(173,38): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(177,35): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(181,44): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(270,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  BasicSQL.vcxproj -> C:\Users\Mihai\source\repos\BasicSQL\x64\Debug\BasicSQL.exe
