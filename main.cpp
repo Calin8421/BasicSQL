@@ -58,15 +58,7 @@ public:
 		if (this->floatCap > 0) floatData = new float[this->floatCap];
 	}
 
-	~rowData()
-	{
-		delete[] textData;
-		delete[] integerData;
-		delete[] floatData;
-		textData = nullptr;
-		integerData = nullptr;
-		floatData = nullptr;
-	}
+
 };
 
 class Table
@@ -85,46 +77,46 @@ private:
 Table* tables = nullptr;
 
 
-int DELETE(std::string command)
+int DELETE(std::string instruction)
 {
 	std::cout << "Data deleted" << std::endl;
-	std::cout << command << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-int DISPLAY(std::string command)
+int DISPLAY(std::string instruction)
 {
 	std::cout << "Data dsiplayed" << std::endl;
-	std::cout << command << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-int SELECT(std::string command)
+int SELECT(std::string instruction)
 {
 	std::cout << "Data selected" << std::endl;
-	std::cout << command << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-int DROP(std::string command)
+int DROP(std::string instruction)
 {
 	std::cout << "Table was dropped" << std::endl;
-	std::cout << command << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-int INSERT(std::string command)
+int INSERT(std::string instruction)
 {
 	std::cout << "Table was inserted" << std::endl;
-	std::cout << command << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-int UPDATE(std::string command)
+int UPDATE(std::string instruction)
 {
 	std::cout << "Table was updated!" << std::endl;
-	std::cout << command << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-int CREATE(std::string command)
+int CREATE(std::string instruction)
 {
 	std::cout << "Table was created!" << std::endl;
-	std::cout << command << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
 
@@ -183,7 +175,7 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction)
 		DISPLAY(instruction);
 		return "DISPLAY";
 	default:
-		std::cout << "UNKNOWN";
+		std::cout << "UNKNOWN"<<std::endl;
 		return "UNKNOWN";
 	}
 }
@@ -202,16 +194,15 @@ int commander()
 	//std::getline(iss, userInstruction);
 	std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
 	std::cout << std::endl;
-	getSqlOpString(getSqlOperation(firstToken), userInstruction);
+	if (getSqlOpString(getSqlOperation(firstToken), userInstruction) == "UNKNOWN") commander();
 
 	
 	
 	return 0;
 }
 
-int main()
+void main()
 {
 	commander();
 
-	return 0;
 }

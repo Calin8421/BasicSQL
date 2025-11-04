@@ -1,2 +1,3 @@
 ﻿  main.cpp
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(204,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
   BasicSQL.vcxproj -> F:\ASE\YEAR2\POO\Projects\BasicSQL\x64\Debug\BasicSQL.exe
