@@ -102,8 +102,82 @@ private:
 	rowData* data = nullptr;
 
 };
+unsigned int tableCounter=0;
 Table* tables = nullptr;
 
+
+
+int CREATE(std::string instruction)
+{
+	std::string originalInstruction = instruction;
+	std::string result = "", name = "", type = "", size = "", default_value = "";
+	std::string tableName = "";
+	char delimiter = ' ';
+	int willNeverBeUsedAgain = -1;
+	std::transform(originalInstruction.begin(), originalInstruction.end(), originalInstruction.begin(), ::toupper);///USE TRANSFORM 
+	//instruction = originalInstruction; WORKING originalInstruction instead of instruction
+	willNeverBeUsedAgain = originalInstruction.find("table") + sizeof("table") + 1;
+	originalInstruction = cut(originalInstruction, willNeverBeUsedAgain);
+	returnFirst(originalInstruction, '(', result);
+	tableName = result;
+	result = removeCharacters(result, 'N');
+	originalInstruction = cut(originalInstruction, result.length());
+	std::cout << tableName << std::endl;
+	while (originalInstruction != ")")
+	{
+		returnFirst(originalInstruction, ')', result);
+		originalInstruction = cut(originalInstruction, result.length() + 1);
+
+		result = cut(result, 1);
+		returnFirst(result, ',', name);
+		result = cut(result, name.length());
+		name = removeCharacters(name, '(');
+		name = removeCharacters(name, ' ');
+
+		result = cut(result, 1);
+		returnFirst(result, ',', type);
+		result = cut(result, type.length() + 1);
+		type = removeCharacters(type, ',');
+		type = removeCharacters(type, ' ');
+
+		returnFirst(result, ',', size);
+		result = cut(result, size.length());
+		size = removeCharacters(size, ',');
+		size = removeCharacters(size, ' ');
+
+		returnFirst(result, ')', default_value);
+		result = cut(result, default_value.length());
+		default_value = removeCharacters(default_value, ')');
+		default_value = removeCharacters(default_value, ' ');
+
+		std::cout << name << "||" << type << "||" << size << "||" << result << "||" << std::endl;
+		//WE HAVE TO SEND EACH DETAIL ABOUT THE ATTRIBUTE INTO THE INSERT FUNCTION TO CREATE A NEW 
+		////PROCESS THIS IN INDEX. CREATE TABLE + NAME HERE. MAKE ATRIBUTES IN INDEX!!!!!!!
+		
+		
+	}
+	return 0;
+}
+int INSERT(std::string instruction)
+{
+	
+	std::cout << "Table was inserted" << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
+
+	return 0;
+}
+int UPDATE(std::string instruction)
+{
+	std::cout << "Table was updated!" << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
+	return 0;
+}
+int DROP(std::string instruction)
+{
+	std::cout << "Table was dropped" << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
+	return 0;
+}
 int DELETE(std::string instruction)
 {
 	std::cout << "Data deleted" << std::endl;
@@ -122,70 +196,8 @@ int SELECT(std::string instruction)
 	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-int DROP(std::string instruction)
-{
-	std::cout << "Table was dropped" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
-	return 0;
-}
-int INSERT(std::string instruction)
-{
-	std::cout << "Table was inserted" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
-	return 0;
-}
-int UPDATE(std::string instruction)
-{
-	std::cout << "Table was updated!" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
-	return 0;
-}
-int CREATE(std::string instruction)
-{
-	std::string originalInstruction=instruction;
-	std::string result = "", name = "", type = "", size = "", default_value = "";
-	std::string tableName = "";
-	char delimiter = ' ';
-	int willNeverBeUsedAgain = -1;
-	for (char& c : originalInstruction)
-	{
-		c = std::toupper(c);
-	}
-	instruction = originalInstruction;
-	willNeverBeUsedAgain = instruction.find("table") + sizeof("table") + 1;
-	instruction = cut(instruction, willNeverBeUsedAgain);
-	returnFirst(instruction, '(', result);
-	tableName = result;
-	result = removeCharacters(result, 'N');
-	instruction = cut(instruction, result.length());
-	std::cout << tableName << std::endl;
-	while (instruction != ")")
-	{
-		returnFirst(instruction, ')', result);
-		instruction = cut(instruction, result.length() + 1);
-		result = cut(result, 1);
-		returnFirst(result, ',', name);
-		result = cut(result, name.length());
-		name = removeCharacters(name, '(');
-		name = removeCharacters(name, ' ');
-		result = cut(result, 1);
-		returnFirst(result, ',', type);
-		result = cut(result, type.length() + 1);
-		type = removeCharacters(type, ',');
-		type = removeCharacters(type, ' ');
-		returnFirst(result, ',', size);
-		result = cut(result, size.length());
-		size = removeCharacters(size, ',');
-		size = removeCharacters(size, ' ');
-		returnFirst(result, ')', default_value);
-		result = cut(result, default_value.length());
-		default_value = removeCharacters(default_value, ')');
-		default_value = removeCharacters(default_value, ' ');
-		std::cout << name << "||" << type << "||" << size << "||" << result << "||" << std::endl;
-		//WE HAVE TO SEND EACH DETAIL ABOUT THE ATTRIBUTE INTO THE INSERT FUNCTION TO CREATE A NEW COLUMN
-	}
-	return 0;
-}
+
+
 
 
 enum class SqlOperation {INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY};
@@ -261,8 +273,9 @@ int commander()
 	//std::getline(iss, userInstruction);
 	std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
 	std::cout << std::endl;
-	if (getSqlOpString(getSqlOperation(firstToken), userInstruction) == "UNKNOWN") commander();
-
+	//if (getSqlOpString(getSqlOperation(firstToken), userInstruction) == "UNKNOWN") commander();
+	getSqlOpString(getSqlOperation(firstToken), userInstruction);
+	commander();
 	
 	
 	return 0;
