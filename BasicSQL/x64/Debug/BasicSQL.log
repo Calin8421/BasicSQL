@@ -1,12 +1,11 @@
 ﻿  main.cpp
 F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(12,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(119,77): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(124,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(129,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(133,35): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(139,38): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(144,35): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(149,44): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(284,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(282,1): warning C4717: 'commander': recursive on all control paths, function will cause runtime stack overflow
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(122,77): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(127,62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(132,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(136,35): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(142,38): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(147,35): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(152,44): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(360,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
   BasicSQL.vcxproj -> F:\ASE\YEAR2\POO\Projects\BasicSQL\x64\Debug\BasicSQL.exe

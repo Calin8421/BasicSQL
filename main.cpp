@@ -107,55 +107,61 @@ Table* tables = nullptr;
 
 
 
+
+
+
 int CREATE(std::string instruction)
 {
-	std::string originalInstruction = instruction;
-	std::string result = "", name = "", type = "", size = "", default_value = "";
-	std::string tableName = "";
-	char delimiter = ' ';
-	int willNeverBeUsedAgain = -1;
-	std::transform(originalInstruction.begin(), originalInstruction.end(), originalInstruction.begin(), ::toupper);///USE TRANSFORM 
-	//instruction = originalInstruction; WORKING originalInstruction instead of instruction
-	willNeverBeUsedAgain = originalInstruction.find("table") + sizeof("table") + 1;
-	originalInstruction = cut(originalInstruction, willNeverBeUsedAgain);
-	returnFirst(originalInstruction, '(', result);
-	tableName = result;
-	result = removeCharacters(result, 'N');
-	originalInstruction = cut(originalInstruction, result.length());
-	std::cout << tableName << std::endl;
-	while (originalInstruction != ")")
-	{
-		returnFirst(originalInstruction, ')', result);
-		originalInstruction = cut(originalInstruction, result.length() + 1);
+	//std::string originalInstruction = instruction;
+	//std::string result = "", name = "", type = "", size = "", default_value = "";
+	//std::string tableName = "";
+	//char delimiter = ' ';
+	//int willNeverBeUsedAgain = -1;
+	//std::transform(originalInstruction.begin(), originalInstruction.end(), originalInstruction.begin(), ::toupper);///USE TRANSFORM 
+	////instruction = originalInstruction; WORKING originalInstruction instead of instruction
+	//willNeverBeUsedAgain = originalInstruction.find("table") + sizeof("table") + 1;
+	//originalInstruction = cut(originalInstruction, willNeverBeUsedAgain);
+	//returnFirst(originalInstruction, '(', result);
+	//tableName = result;
+	//result = removeCharacters(result, 'N');
+	//originalInstruction = cut(originalInstruction, result.length());
+	//std::cout << tableName << std::endl;
+	//while (originalInstruction != ")")
+	//{
+	//	returnFirst(originalInstruction, ')', result);
+	//	originalInstruction = cut(originalInstruction, result.length() + 1);
 
-		result = cut(result, 1);
-		returnFirst(result, ',', name);
-		result = cut(result, name.length());
-		name = removeCharacters(name, '(');
-		name = removeCharacters(name, ' ');
+	//	result = cut(result, 1);
+	//	returnFirst(result, ',', name);
+	//	result = cut(result, name.length());
+	//	name = removeCharacters(name, '(');
+	//	name = removeCharacters(name, ' ');
 
-		result = cut(result, 1);
-		returnFirst(result, ',', type);
-		result = cut(result, type.length() + 1);
-		type = removeCharacters(type, ',');
-		type = removeCharacters(type, ' ');
+	//	result = cut(result, 1);
+	//	returnFirst(result, ',', type);
+	//	result = cut(result, type.length() + 1);
+	//	type = removeCharacters(type, ',');
+	//	type = removeCharacters(type, ' ');
 
-		returnFirst(result, ',', size);
-		result = cut(result, size.length());
-		size = removeCharacters(size, ',');
-		size = removeCharacters(size, ' ');
+	//	returnFirst(result, ',', size);
+	//	result = cut(result, size.length());
+	//	size = removeCharacters(size, ',');
+	//	size = removeCharacters(size, ' ');
 
-		returnFirst(result, ')', default_value);
-		result = cut(result, default_value.length());
-		default_value = removeCharacters(default_value, ')');
-		default_value = removeCharacters(default_value, ' ');
+	//	returnFirst(result, ')', default_value);
+	//	result = cut(result, default_value.length());
+	//	default_value = removeCharacters(default_value, ')');
+	//	default_value = removeCharacters(default_value, ' ');
 
-		std::cout << name << "||" << type << "||" << size << "||" << result << "||" << std::endl;
-		//WE HAVE TO SEND EACH DETAIL ABOUT THE ATTRIBUTE INTO THE INSERT FUNCTION TO CREATE A NEW 
-		////PROCESS THIS IN INDEX. CREATE TABLE + NAME HERE. MAKE ATRIBUTES IN INDEX!!!!!!!
-		
-		
-	}
+	//	std::cout << name << "||" << type << "||" << size << "||" << result << "||" << std::endl;
+	//	//WE HAVE TO SEND EACH DETAIL ABOUT THE ATTRIBUTE INTO THE INSERT FUNCTION TO CREATE A NEW 
+	//	////PROCESS THIS IN INDEX. CREATE TABLE + NAME HERE. MAKE ATRIBUTES IN INDEX!!!!!!!
+	//	
+	//	
+	//}
+	
+	std::cout << "Table was created" << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
 int INSERT(std::string instruction)
@@ -196,11 +202,55 @@ int SELECT(std::string instruction)
 	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
+void showCommands()
+{
+	std::cout << std::endl;
+	std::cout << "<==================== SQL COMMAND HELP ====================>"<<std::endl;
+    std::cout << "COMMAND   | DESCRIPTION"<<std::endl;
+    std::cout << "----------------------------------------------------------"<<std::endl;
+    std::cout << "INSERT    | Adds new rows of data into a table."<<std::endl;
+    std::cout << "          | Example: INSERT INTO employees (name, salary)"<<std::endl;
+	std::cout << "          |           VALUES ('John', 5000);" << std::endl << std::endl;
+
+	std::cout << "SELECT    | Retrieves data from one or more tables." << std::endl;
+    std::cout << "          | Example: SELECT name, salary FROM employees";
+    std::cout << "          |           WHERE salary > 3000;"<<std::endl << std::endl;
+
+    std::cout << "UPDATE    | Modifies existing rows in a table."<<std::endl;
+    std::cout << "          | Example: UPDATE employees SET salary = 6000"<<std::endl;
+    std::cout << "          |           WHERE name = 'John';"<<std::endl << std::endl;
+
+    std::cout << "DELETE    | Removes rows from a table."<<std::endl;
+	std::cout << "          | Example: DELETE FROM employees WHERE name = 'John';" << std::endl << std::endl;
+
+	std::cout << "CREATE    | Creates a new database object (e.g., table)." << std::endl;
+	std::cout << "          | Example: CREATE TABLE employees (id INT, name TEXT, salary FLOAT);" << std::endl << std::endl;
+
+	std::cout << "DROP      | Deletes a database object permanently." << std::endl;
+	std::cout << "          | Example: DROP TABLE employees;" << std::endl << std::endl;
+
+	std::cout << "DISPLAY   | Shows the content of the current database or table (custom command)." << std::endl;
+    std::cout << "          | Example: DISPLAY employees;" <<std::endl << std::endl;
+
+    std::cout << "CLEAR     | Clears the screen or console output (custom shell command)." << std::endl;
+    std::cout << "          | Example: CLEAR;" << std::endl << std::endl;
+
+	std::cout << "HELP/INFO | Shows help information about available commands." << std::endl;
+	std::cout << "          | Example: HELP;" << std::endl << std::endl;
+
+    std::cout << "QUIT/EXIT | Closes the SQL console." << std::endl;
+    std::cout << "          | Example: QUIT;" << std::endl << std::endl;
+
+    std::cout << "EXIT      | Same as QUIT - exits the program." << std::endl;
+    std::cout << "          | Example: EXIT;" << std::endl << std::endl;
+
+    std::cout << "UNKNOWN   | Indicates an unrecognized or invalid command." << std::endl;
+    std::cout << "          | Example: (displayed automatically for invalid input)" << std::endl;
+	std::cout << "==========================================================" << std::endl;
+}
 
 
-
-
-enum class SqlOperation {INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY};
+enum class SqlOperation {INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY, QUIT, EXIT, CLEAR, HELP, INFO};
 
 SqlOperation getSqlOperation(const std::string& command)
 {
@@ -211,7 +261,12 @@ SqlOperation getSqlOperation(const std::string& command)
 		{"CREATE", SqlOperation::CREATE},
 		{"UPDATE", SqlOperation::UPDATE},
 		{"DELETE", SqlOperation::DELETE},
-		{"DISPLAY", SqlOperation::DISPLAY}
+		{"DISPLAY", SqlOperation::DISPLAY},
+		{"QUIT", SqlOperation::QUIT},
+		{"EXIT", SqlOperation::EXIT},
+		{"CLEAR", SqlOperation::CLEAR},
+		{"HELP", SqlOperation::HELP},
+		{"INFO", SqlOperation::INFO}
 
 	};
 
@@ -228,7 +283,9 @@ SqlOperation getSqlOperation(const std::string& command)
 	return SqlOperation::UNKNOWN;
 }
 
-std::string getSqlOpString(const SqlOperation& op, std::string& instruction)
+
+
+std::string getSqlOpString(const SqlOperation& op, std::string& instruction, bool& quit)
 {
 	switch (op)
 	{
@@ -253,6 +310,21 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction)
 	case SqlOperation::DISPLAY:
 		DISPLAY(instruction);
 		return "DISPLAY";
+	case SqlOperation::QUIT:
+		quit = true;
+		return "QUIT";
+	case SqlOperation::EXIT:
+		quit = true;
+		return "QUIT";
+	case SqlOperation::CLEAR:
+		system("cls");
+		return "CLEAR";
+	case SqlOperation::HELP:
+		showCommands();
+		return "INFO";
+	case SqlOperation::INFO:
+		showCommands();
+		return "INFO";
 	default:
 		std::cout << "UNKNOWN"<<std::endl;
 		return "UNKNOWN";
@@ -261,28 +333,74 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction)
 
 
 
-int commander()
+int sqlQueryConsole()
 {
-	std::cout << "Listening for command: ";
-	std::string userInput;
-	std::string firstToken;
-	std::string userInstruction;
-	std::getline(std::cin, userInput);
-	std::istringstream iss(userInput);
-	iss >> firstToken;
-	//std::getline(iss, userInstruction);
-	std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
-	std::cout << std::endl;
-	//if (getSqlOpString(getSqlOperation(firstToken), userInstruction) == "UNKNOWN") commander();
-	getSqlOpString(getSqlOperation(firstToken), userInstruction);
-	commander();
 	
+		std::cout << "Listening for command: ";
+		std::string userInput;
+		std::string firstToken;
+		std::string userInstruction;
+		std::getline(std::cin, userInput);
+		std::istringstream iss(userInput);
+		iss >> firstToken;
+		//std::getline(iss, userInstruction);
+		std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
+		std::cout << std::endl;
+		bool quit=false;
+		getSqlOpString(getSqlOperation(firstToken), userInstruction, quit);
+		if (!quit) sqlQueryConsole();
+		
+		
 	
 	return 0;
 }
 
+
 void main()
 {
-	commander();
+	int n;
+	bool running = true;
+
+	while (running)
+	{
+		std::cout << "<=====  SQLite Engine  =====>" << std::endl;
+		std::cout << "<======  Cheese Team  ======>" << std::endl;
+		std::cout << "(1) Query console" << std::endl;
+		std::cout << "(2) Import/Export files" << std::endl;
+		std::cout << "(0) Quit" << std::endl;
+		std::cout << "Insert menu option number: ";
+		std::cin >> n;
+		std::cout << std::endl;
+
+		switch (n)
+		{
+		case 1:
+			system("cls");
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			sqlQueryConsole();
+			system("cls");
+			
+			break;
+
+		case 2:
+			system("cls");
+			std::cout << "to be continued. returning to menu..." << std::endl;
+			system("pause");
+			system("cls");
+			break;
+
+		case 0:
+			running = false;
+			break;
+
+		default:
+			system("clear");
+			std::cout << "Undefined. Try again." << std::endl;
+			break;
+		}
+	}
+
+	std::cout << "Exiting program. Project made by Gheorghe Calin and Grigore Mihaita Adelin" << std::endl;
 
 }
