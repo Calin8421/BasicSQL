@@ -5,8 +5,9 @@
 #include <algorithm>
 #include <string>
 #include <regex>
-#include<vector>
+#include <vector>
 
+///STRING OPERATION FUNCTION
 void returnFirst(std::string instruction, const char delimiter, std::string& result)
 {
 	int i = instruction.find(delimiter);
@@ -35,7 +36,7 @@ std::string removeCharacters(std::string instruction, char character)
 	return result;
 }
 
-
+///DYNAMIC TABLE ALLOC
 class rowData
 {
 private:
@@ -48,6 +49,7 @@ private:
 	std::string* textData=nullptr;
 	int* integerData = nullptr;
 	float* floatData = nullptr;
+
 public:
 	void setText(std::string data)
 	{
@@ -109,7 +111,7 @@ Table* tables = nullptr;
 
 
 
-
+///FUNCTIONS FOR COMMAND INTERPRETER
 int CREATE(std::string instruction)
 {
 	//std::string originalInstruction = instruction;
@@ -202,18 +204,19 @@ int SELECT(std::string instruction)
 	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
+
 void showCommands()
 {
 	std::cout << std::endl;
-	std::cout << "<==================== SQL COMMAND HELP ====================>"<<std::endl;
+	std::cout << "<=================================== SQL COMMAND HELP ===================================>"<<std::endl;
     std::cout << "COMMAND   | DESCRIPTION"<<std::endl;
-    std::cout << "----------------------------------------------------------"<<std::endl;
+    std::cout << "---------------------------------------------------------------------------------"<<std::endl;
     std::cout << "INSERT    | Adds new rows of data into a table."<<std::endl;
     std::cout << "          | Example: INSERT INTO employees (name, salary)"<<std::endl;
 	std::cout << "          |           VALUES ('John', 5000);" << std::endl << std::endl;
 
 	std::cout << "SELECT    | Retrieves data from one or more tables." << std::endl;
-    std::cout << "          | Example: SELECT name, salary FROM employees";
+    std::cout << "          | Example: SELECT name, salary FROM employees" << std::endl;
     std::cout << "          |           WHERE salary > 3000;"<<std::endl << std::endl;
 
     std::cout << "UPDATE    | Modifies existing rows in a table."<<std::endl;
@@ -246,7 +249,7 @@ void showCommands()
 
     std::cout << "UNKNOWN   | Indicates an unrecognized or invalid command." << std::endl;
     std::cout << "          | Example: (displayed automatically for invalid input)" << std::endl;
-	std::cout << "==========================================================" << std::endl;
+	std::cout << "<========================================================================================>" << std::endl;
 }
 
 
@@ -311,8 +314,6 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction, boo
 		DISPLAY(instruction);
 		return "DISPLAY";
 	case SqlOperation::QUIT:
-		quit = true;
-		return "QUIT";
 	case SqlOperation::EXIT:
 		quit = true;
 		return "QUIT";
@@ -320,8 +321,6 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction, boo
 		system("cls");
 		return "CLEAR";
 	case SqlOperation::HELP:
-		showCommands();
-		return "INFO";
 	case SqlOperation::INFO:
 		showCommands();
 		return "INFO";
@@ -332,10 +331,9 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction, boo
 }
 
 
-
+///SQL CONSOLE
 int sqlQueryConsole()
 {
-	
 		std::cout << "Listening for command: ";
 		std::string userInput;
 		std::string firstToken;
@@ -349,54 +347,63 @@ int sqlQueryConsole()
 		bool quit=false;
 		getSqlOpString(getSqlOperation(firstToken), userInstruction, quit);
 		if (!quit) sqlQueryConsole();
-		
-		
 	
 	return 0;
 }
 
 
+///MENU FUNCTIONS
+void startMenu(char& n)
+{
+	std::cout << "<=====  SQLite Engine  =====>" << std::endl;
+	std::cout << "<======  Cheese Team  ======>" << std::endl;
+	std::cout << "(1) Query console" << std::endl;
+	std::cout << "(2) Import/Export files" << std::endl;
+	std::cout << "(x) Quit program" << std::endl;
+	std::cout << "<===========================>" << std::endl;
+	std::cout << "Insert menu option number: ";
+	std::cin >> n;
+	std::cout << std::endl;
+}
+
+
+
+///MAIN PROGRAM
 void main()
 {
-	int n;
+	char c;
 	bool running = true;
-
-	while (running)
-	{
-		std::cout << "<=====  SQLite Engine  =====>" << std::endl;
-		std::cout << "<======  Cheese Team  ======>" << std::endl;
-		std::cout << "(1) Query console" << std::endl;
-		std::cout << "(2) Import/Export files" << std::endl;
-		std::cout << "(0) Quit" << std::endl;
-		std::cout << "Insert menu option number: ";
-		std::cin >> n;
-		std::cout << std::endl;
-
-		switch (n)
+	
+	while(running){
+		
+		startMenu(c);
+		switch (c)
 		{
-		case 1:
+		case '1':
 			system("cls");
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			sqlQueryConsole();
 			system("cls");
-			
 			break;
 
-		case 2:
+		case '2':
 			system("cls");
 			std::cout << "to be continued. returning to menu..." << std::endl;
 			system("pause");
 			system("cls");
 			break;
-
-		case 0:
+		
+		case 'x':
 			running = false;
 			break;
 
 		default:
-			system("clear");
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			system("cls");
 			std::cout << "Undefined. Try again." << std::endl;
+			system("pause");
+			system("cls");
 			break;
 		}
 	}
