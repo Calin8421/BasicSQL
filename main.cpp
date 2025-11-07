@@ -363,6 +363,7 @@ void startMenu(char& n)
 	std::cout << "<===========================>" << std::endl;
 	std::cout << "Insert menu option number: ";
 	std::cin >> n;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::cout << std::endl;
 }
 
@@ -382,7 +383,6 @@ void main()
 		case '1':
 			system("cls");
 			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			sqlQueryConsole();
 			system("cls");
 			break;
@@ -399,13 +399,13 @@ void main()
 			break;
 
 		default:
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			system("cls");
 			std::cout << "Undefined. Try again." << std::endl;
 			system("pause");
 			system("cls");
 			break;
 		}
+		
 	}
 
 	std::cout << "Exiting program. Project made by Gheorghe Calin and Grigore Mihaita Adelin" << std::endl;
