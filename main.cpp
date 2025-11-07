@@ -353,8 +353,9 @@ int sqlQueryConsole()
 
 
 ///MENU FUNCTIONS
-void startMenu(char& n)
+void startMenu(std::string& n)
 {
+
 	std::cout << "<=====  SQLite Engine  =====>" << std::endl;
 	std::cout << "<======  Cheese Team  ======>" << std::endl;
 	std::cout << "(1) Query console" << std::endl;
@@ -362,7 +363,8 @@ void startMenu(char& n)
 	std::cout << "(x) Quit program" << std::endl;
 	std::cout << "<===========================>" << std::endl;
 	std::cout << "Insert menu option number: ";
-	std::cin >> n;
+	if (n.size() > 1) n = '0';
+	else std::cin>>n;
 	std::cout << std::endl;
 }
 
@@ -371,12 +373,13 @@ void startMenu(char& n)
 ///MAIN PROGRAM
 void main()
 {
-	char c;
+	std::string userInput;
+	char c=userInput[0];
 	bool running = true;
 	
 	while(running){
 		
-		startMenu(c);
+		startMenu(userInput);
 		switch (c)
 		{
 		case '1':
@@ -406,6 +409,7 @@ void main()
 			system("cls");
 			break;
 		}
+		
 	}
 
 	std::cout << "Exiting program. Project made by Gheorghe Calin and Grigore Mihaita Adelin" << std::endl;
