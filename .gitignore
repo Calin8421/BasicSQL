@@ -1,1 +1,23 @@
+# Visual Studio / MSVC
+*.obj
+*.pdb
+*.idb
+*.ilk
+*.log
+*.tlog/
+*.exe
+*.dll
+*.cache
+*.ipch
+*.opendb
+
+# Build directories
+x64/
+x86/
+Debug/
+Release/
+
+# VS user/project
 .vs/
+*.VC.db
+*.VC.opendb
