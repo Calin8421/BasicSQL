@@ -6,6 +6,27 @@
 #include <string>
 #include <regex>
 #include <vector>
+#include <fstream>
+
+
+
+bool checkExistenceOFile(std::string fileName)
+{
+	std::ifstream file;
+	file.open(fileName);
+	if (file.is_open())
+	{
+		file.close();
+		return true;
+	}
+	return false;
+}
+
+bool isFileEmpty(std::string fileName)
+{
+	std::ifstream pFile(fileName);
+	return pFile.tellg() == 0 && pFile.peek() == std::ifstream::traits_type::eof();
+}
 
 ///STRING OPERATION FUNCTION
 void returnFirst(std::string instruction, const char delimiter, std::string& result)
@@ -344,13 +365,146 @@ int sqlQueryConsole()
 		//std::getline(iss, userInstruction);
 		std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
 		std::cout << std::endl;
-		bool quit=false;
+		bool quit = false;
 		getSqlOpString(getSqlOperation(firstToken), userInstruction, quit);
 		if (!quit) sqlQueryConsole();
 	
 	return 0;
 }
 
+void overwriteScriptEnvContent()
+{
+	std::ofstream scriptEnv("scriptEnv.txt");
+	scriptEnv.close();
+	std::cout << "Contents deleted!"<<std::endl;
+}
+
+
+void scriptEnvironment()
+{
+	std::cout << "Script Environment not finished" << std::endl;
+	std::cout << "Please write manually in the file and SAVE!" << std::endl;
+}
+
+
+int scriptRunner()
+{
+	std::string line;
+	std::ifstream scriptEnv;
+	std::string firstToken;
+	std::string scriptInstruction;
+	bool f = false;
+	std::string flag;
+	int lineNr=0;
+	scriptEnv.open("scriptEnv.txt");
+	if (scriptEnv.is_open())
+	{
+		std::cout << "File created or found!" << std::endl;///add existing checker;
+		/*std::cout << "Printed: <script runner here>" << std::endl;
+		scriptEnv << "script runner here";*/
+	
+		while (std::getline(scriptEnv, line))
+		{
+			if (!line.empty())
+			{
+				lineNr++;
+				std::istringstream iss(line);
+				iss >> firstToken;
+				std::getline(iss >> std::ws, scriptInstruction);
+				flag = getSqlOpString(getSqlOperation(firstToken), scriptInstruction, f);
+				if (flag == "UNKNOWN")
+				{
+					std::cout << "Unknown command on line " <<lineNr << std::endl;
+					std::cout << line << std::endl;
+					return 0;
+				}
+			/*	std::cout << "Line: " << line << std::endl;
+				std::cout << "First token: " << firstToken << std::endl;
+				std::cout << "Instruction: " << scriptInstruction << std::endl;*/
+			}
+			
+		}
+		std::cout << "Reached end of script!" << std::endl;
+	}
+	
+	scriptEnv.close();
+}
+
+
+
+void scriptRunnerMenu()
+{
+	if (checkExistenceOFile("scriptEnv.txt") and !isFileEmpty("scriptEnv.txt"))
+	{
+		std::cout << "" << std::endl;
+		std::cout << "Overwrite script runner contents? Y/n: ";
+		bool running = true;
+		char c;
+		while (running)
+		{
+			std::cin >> c;
+			switch (c)
+			{
+			case 'y':
+			case 'Y':
+				overwriteScriptEnvContent();
+				scriptEnvironment();
+				running = false;
+				break;
+			case 'n':
+			case 'N':
+				scriptRunner();
+				running = false;
+				break;
+			default:
+				system("cls");
+				std::cout << "Undefined. Try again." << std::endl;
+				system("pause");
+				system("cls");
+				break;
+			}
+		}
+
+	}
+	else
+	scriptEnvironment();
+	
+	
+}
+
+
+
+
+
+void saveScriptProg()
+{
+	std::cout << "Save contents of script runner? Y/n: ";
+	bool running = true;
+	char c;
+	while (running)
+	{
+		std::cin >> c;
+		switch (c)
+		{
+		case 'y':
+		case 'Y':
+			running = false;
+			break;
+		case 'n':
+		case 'N':
+			overwriteScriptEnvContent();
+			running = false;
+			break;
+		default:
+			system("cls");
+			std::cout << "Undefined. Try again." << std::endl;
+			system("pause");
+			system("cls");
+			break;
+		}
+	}
+
+}
 
 ///MENU FUNCTIONS
 void startMenu(char& n)
@@ -359,6 +513,7 @@ void startMenu(char& n)
 	std::cout << "<======  Cheese Team  ======>" << std::endl;
 	std::cout << "(1) Query console" << std::endl;
 	std::cout << "(2) Import/Export files" << std::endl;
+	std::cout << "(3) Script runner" << std::endl;
 	std::cout << "(x) Quit program" << std::endl;
 	std::cout << "<===========================>" << std::endl;
 	std::cout << "Insert menu option number: ";
@@ -372,6 +527,7 @@ void startMenu(char& n)
 ///MAIN PROGRAM
 void main()
 {
+	std::string fileName;
 	char c;
 	bool running = true;
 	
@@ -393,8 +549,15 @@ void main()
 			system("pause");
 			system("cls");
 			break;
-		
+		case '3':
+			system("cls");
+			scriptRunnerMenu();
+			system("pause");
+			system("cls");
+			break;
 		case 'x':
+			if(checkExistenceOFile("scriptEnv.txt") and !isFileEmpty("scriptEnv.txt"))
+			saveScriptProg();
 			running = false;
 			break;
 
