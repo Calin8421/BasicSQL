@@ -66,7 +66,7 @@ private:
 	int textCap = 0;
 	int integerCap = 0;
 	int floatCap = 0;
-	std::string* textData=nullptr;
+	std::string* textData = nullptr;
 	int* integerData = nullptr;
 	float* floatData = nullptr;
 
@@ -98,7 +98,7 @@ public:
 		}
 	}
 
-	rowData(int textCap,int integerCap,int floatCap)
+	rowData(int textCap, int integerCap, int floatCap)
 	{
 		this->textCap = textCap;
 		this->integerCap = integerCap;
@@ -115,16 +115,16 @@ class Table
 {
 public:
 	enum order { TEXT = 1, INTEGER = 2, FLOAT = 3 };
-	
+
 private:
-	std::string tableName="";
+	std::string tableName = "";
 	order* typesOrder = nullptr;
 	std::string* attributeNames = nullptr;
 	int totalCount = 0, textCount = 0, integerCount = 0, floatCount = 0;
 	rowData* data = nullptr;
 
 };
-unsigned int tableCounter=0;
+unsigned int tableCounter = 0;
 Table* tables = nullptr;
 
 
@@ -178,14 +178,14 @@ int CREATE(std::string instruction)
 	//	
 	//	
 	//}
-	
+
 	std::cout << "Table was created" << std::endl;
 	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
 int INSERT(std::string instruction)
 {
-	
+
 	std::cout << "Table was inserted" << std::endl;
 	std::cout << "Instructions are: " << instruction << std::endl;
 
@@ -225,22 +225,22 @@ int SELECT(std::string instruction)
 void showCommands()
 {
 	std::cout << std::endl;
-	std::cout << "<=================================== SQL COMMAND HELP ===================================>"<<std::endl;
-    std::cout << "COMMAND   | DESCRIPTION"<<std::endl;
-    std::cout << "---------------------------------------------------------------------------------"<<std::endl;
-    std::cout << "INSERT    | Adds new rows of data into a table."<<std::endl;
-    std::cout << "          | Example: INSERT INTO employees (name, salary)"<<std::endl;
+	std::cout << "<=================================== SQL COMMAND HELP ===================================>" << std::endl;
+	std::cout << "COMMAND   | DESCRIPTION" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------" << std::endl;
+	std::cout << "INSERT    | Adds new rows of data into a table." << std::endl;
+	std::cout << "          | Example: INSERT INTO employees (name, salary)" << std::endl;
 	std::cout << "          |           VALUES ('John', 5000);" << std::endl << std::endl;
 
 	std::cout << "SELECT    | Retrieves data from one or more tables." << std::endl;
-    std::cout << "          | Example: SELECT name, salary FROM employees" << std::endl;
-    std::cout << "          |           WHERE salary > 3000;"<<std::endl << std::endl;
+	std::cout << "          | Example: SELECT name, salary FROM employees" << std::endl;
+	std::cout << "          |           WHERE salary > 3000;" << std::endl << std::endl;
 
-    std::cout << "UPDATE    | Modifies existing rows in a table."<<std::endl;
-    std::cout << "          | Example: UPDATE employees SET salary = 6000"<<std::endl;
-    std::cout << "          |           WHERE name = 'John';"<<std::endl << std::endl;
+	std::cout << "UPDATE    | Modifies existing rows in a table." << std::endl;
+	std::cout << "          | Example: UPDATE employees SET salary = 6000" << std::endl;
+	std::cout << "          |           WHERE name = 'John';" << std::endl << std::endl;
 
-    std::cout << "DELETE    | Removes rows from a table."<<std::endl;
+	std::cout << "DELETE    | Removes rows from a table." << std::endl;
 	std::cout << "          | Example: DELETE FROM employees WHERE name = 'John';" << std::endl << std::endl;
 
 	std::cout << "CREATE    | Creates a new database object (e.g., table)." << std::endl;
@@ -250,27 +250,27 @@ void showCommands()
 	std::cout << "          | Example: DROP TABLE employees;" << std::endl << std::endl;
 
 	std::cout << "DISPLAY   | Shows the content of the current database or table (custom command)." << std::endl;
-    std::cout << "          | Example: DISPLAY employees;" <<std::endl << std::endl;
+	std::cout << "          | Example: DISPLAY employees;" << std::endl << std::endl;
 
-    std::cout << "CLEAR     | Clears the screen or console output (custom shell command)." << std::endl;
-    std::cout << "          | Example: CLEAR;" << std::endl << std::endl;
+	std::cout << "CLEAR     | Clears the screen or console output (custom shell command)." << std::endl;
+	std::cout << "          | Example: CLEAR;" << std::endl << std::endl;
 
 	std::cout << "HELP/INFO | Shows help information about available commands." << std::endl;
 	std::cout << "          | Example: HELP;" << std::endl << std::endl;
 
-    std::cout << "QUIT/EXIT | Closes the SQL console." << std::endl;
-    std::cout << "          | Example: QUIT;" << std::endl << std::endl;
+	std::cout << "QUIT/EXIT | Closes the SQL console." << std::endl;
+	std::cout << "          | Example: QUIT;" << std::endl << std::endl;
 
-    std::cout << "EXIT      | Same as QUIT - exits the program." << std::endl;
-    std::cout << "          | Example: EXIT;" << std::endl << std::endl;
+	std::cout << "EXIT      | Same as QUIT - exits the program." << std::endl;
+	std::cout << "          | Example: EXIT;" << std::endl << std::endl;
 
-    std::cout << "UNKNOWN   | Indicates an unrecognized or invalid command." << std::endl;
-    std::cout << "          | Example: (displayed automatically for invalid input)" << std::endl;
+	std::cout << "UNKNOWN   | Indicates an unrecognized or invalid command." << std::endl;
+	std::cout << "          | Example: (displayed automatically for invalid input)" << std::endl;
 	std::cout << "<========================================================================================>" << std::endl;
 }
 
 
-enum class SqlOperation {INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY, QUIT, EXIT, CLEAR, HELP, INFO};
+enum class SqlOperation { INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY, QUIT, EXIT, CLEAR, HELP, INFO };
 
 SqlOperation getSqlOperation(const std::string& command)
 {
@@ -342,7 +342,7 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction, boo
 		showCommands();
 		return "INFO";
 	default:
-		std::cout << "UNKNOWN"<<std::endl;
+		std::cout << "UNKNOWN" << std::endl;
 		return "UNKNOWN";
 	}
 }
@@ -351,20 +351,20 @@ std::string getSqlOpString(const SqlOperation& op, std::string& instruction, boo
 ///SQL CONSOLE
 int sqlQueryConsole()
 {
-		std::cout << "Listening for command: ";
-		std::string userInput;
-		std::string firstToken;
-		std::string userInstruction;
-		std::getline(std::cin, userInput);
-		std::istringstream iss(userInput);
-		iss >> firstToken;
-		//std::getline(iss, userInstruction);
-		std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
-		std::cout << std::endl;
-		bool quit = false;
-		getSqlOpString(getSqlOperation(firstToken), userInstruction, quit);
-		if (!quit) sqlQueryConsole();
-	
+	std::cout << "Listening for command: ";
+	std::string userInput;
+	std::string firstToken;
+	std::string userInstruction;
+	std::getline(std::cin, userInput);
+	std::istringstream iss(userInput);
+	iss >> firstToken;
+	//std::getline(iss, userInstruction);
+	std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
+	std::cout << std::endl;
+	bool quit = false;
+	getSqlOpString(getSqlOperation(firstToken), userInstruction, quit);
+	if (!quit) sqlQueryConsole();
+
 	return 0;
 }
 
@@ -372,14 +372,29 @@ void overwriteScriptEnvContent()
 {
 	std::ofstream scriptEnv("scriptEnv.txt");
 	scriptEnv.close();
-	std::cout << "Contents deleted!"<<std::endl;
+	std::cout << "Contents deleted!" << std::endl;
 }
 
 
 void scriptEnvironment()
 {
 	std::cout << "Script Environment not finished" << std::endl;
+	if (!checkExistenceOFile("scriptEnv.txt"))
+	{
+		std::ofstream scriptEnv("scriptEnv.txt");
+		if (scriptEnv.is_open())
+		{
+			std::cout << "Script file created!" << std::endl;
+			scriptEnv.close();
+		}
+		else
+		{
+			std::cout << "Error: Could not create script file." << std::endl;
+		}
+
+	}
 	std::cout << "Please write manually in the file and SAVE!" << std::endl;
+
 }
 
 
@@ -391,7 +406,7 @@ int scriptRunner()
 	std::string scriptInstruction;
 	bool f = false;
 	std::string flag;
-	int lineNr=0;
+	int lineNr = 0;
 	scriptEnv.open("scriptEnv.txt");
 	if (scriptEnv.is_open())
 	{
@@ -406,23 +421,23 @@ int scriptRunner()
 				flag = getSqlOpString(getSqlOperation(firstToken), scriptInstruction, f);
 				if (flag == "UNKNOWN")
 				{
-					std::cout << "Unknown command on line " <<lineNr << std::endl;
+					std::cout << "Unknown command on line " << lineNr << std::endl;
 					std::cout << line << std::endl;
 					return 0;
 				}
-			/*	std::cout << "Line: " << line << std::endl;
-				std::cout << "First token: " << firstToken << std::endl;
-				std::cout << "Instruction: " << scriptInstruction << std::endl;*/
+				/*	std::cout << "Line: " << line << std::endl;
+					std::cout << "First token: " << firstToken << std::endl;
+					std::cout << "Instruction: " << scriptInstruction << std::endl;*/
 			}
-			
+
 		}
 		std::cout << "Reached end of script!" << std::endl;
 	}
 	else
-	std::cout << "File not found or couldn't be open" << std::endl;///add existing checker;
+		std::cout << "File not found or couldn't be open" << std::endl;///add existing checker;
 	/*std::cout << "Printed: <script runner here>" << std::endl;
 	scriptEnv << "script runner here";*/
-	
+
 	scriptEnv.close();
 }
 
@@ -463,9 +478,9 @@ void scriptRunnerMenu()
 
 	}
 	else
-	scriptEnvironment();
-	
-	
+		scriptEnvironment();
+
+
 }
 
 
@@ -526,9 +541,9 @@ void main()
 	std::string fileName;
 	char c;
 	bool running = true;
-	
-	while(running){
-		
+
+	while (running) {
+
 		startMenu(c);
 		switch (c)
 		{
@@ -551,9 +566,10 @@ void main()
 			system("pause");
 			system("cls");
 			break;
+		case 'X':
 		case 'x':
-			if(checkExistenceOFile("scriptEnv.txt") and !isFileEmpty("scriptEnv.txt"))
-			saveScriptProg();
+			if (checkExistenceOFile("scriptEnv.txt") and !isFileEmpty("scriptEnv.txt"))
+				saveScriptProg();
 			running = false;
 			break;
 
@@ -564,7 +580,7 @@ void main()
 			system("cls");
 			break;
 		}
-		
+
 	}
 
 	std::cout << "Exiting program. Project made by Gheorghe Calin and Grigore Mihaita Adelin" << std::endl;
