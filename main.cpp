@@ -8,7 +8,7 @@
 #include <vector>
 #include <fstream>
 
-
+// UTILITY FUNCTIONS
 
 bool checkExistenceOFile(std::string fileName)
 {
@@ -28,7 +28,6 @@ bool isFileEmpty(std::string fileName)
 	return pFile.tellg() == 0 && pFile.peek() == std::ifstream::traits_type::eof();
 }
 
-///STRING OPERATION FUNCTION
 void returnFirst(std::string instruction, const char delimiter, std::string& result)
 {
 	int i = instruction.find(delimiter);
@@ -127,9 +126,6 @@ private:
 };
 unsigned int tableCounter=0;
 Table* tables = nullptr;
-
-
-
 
 
 ///FUNCTIONS FOR COMMAND INTERPRETER
@@ -399,10 +395,6 @@ int scriptRunner()
 	scriptEnv.open("scriptEnv.txt");
 	if (scriptEnv.is_open())
 	{
-		std::cout << "File created or found!" << std::endl;///add existing checker;
-		/*std::cout << "Printed: <script runner here>" << std::endl;
-		scriptEnv << "script runner here";*/
-	
 		while (std::getline(scriptEnv, line))
 		{
 			if (!line.empty())
@@ -426,6 +418,10 @@ int scriptRunner()
 		}
 		std::cout << "Reached end of script!" << std::endl;
 	}
+	else
+	std::cout << "File not found or couldn't be open" << std::endl;///add existing checker;
+	/*std::cout << "Printed: <script runner here>" << std::endl;
+	scriptEnv << "script runner here";*/
 	
 	scriptEnv.close();
 }
