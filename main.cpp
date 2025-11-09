@@ -331,7 +331,7 @@ int CREATE(std::string instruction)
 		{
 			if (originalInstruction[originalInstruction.length() - 1] != ')')
 			{
-				std::cout << std::endl << "\033[31mInvalid format, type: there are more characters after the last ')'\033[0m" << std::endl;
+				std::cout << std::endl << "\033[31mInvalid format, type: there are more characters after the last ')'\033[" << std::endl;
 				return 7; //WILL HANDLE ERROR HERE LATER
 			}
 			else
@@ -592,7 +592,7 @@ void scriptEnvironment()
 		}
 		else
 		{
-			std::cout << "Error: Could not create script file." << std::endl;
+			std::cout << "\033[31mError: Could not create script file.\033[0m" << std::endl;
 		}
 
 	}
@@ -602,7 +602,7 @@ void scriptEnvironment()
 		writeInEnv.open(scriptEnvFile);
 		std::string line;
 		std::vector<std::string> lines;
-		std::cout << "Script Environment (insert quit when you are done):" << std::endl;
+		std::cout << "\033[32mScript Environment (insert quit when you are done):\033[0m" << std::endl;
 		while (std::getline(std::cin, line))
 		{
 			if (line == "QUIT" or line == "quit") break;
@@ -631,7 +631,7 @@ void scriptEnvironment()
 					break;
 				default:
 					system("cls");
-					std::cout << "Undefined. Try again." << std::endl;
+					std::cout << "\033[31mUndefined. Try again.\033[0m" << std::endl;
 					system("pause");
 					system("cls");
 					break;
@@ -671,7 +671,7 @@ void scriptRunnerMenu()
 				break;
 			default:
 				system("cls");
-				std::cout << "Undefined. Try again." << std::endl;
+				std::cout << "\033[31mUndefined. Try again.\033[0m" << std::endl;
 				system("pause");
 				system("cls");
 				break;
@@ -775,7 +775,7 @@ void main()
 
 		default:
 			system("cls");
-			std::cout << "Undefined. Try again." << std::endl;
+			std::cout << "\033[31mUndefined. Try again.\033[0m" << std::endl;
 			system("pause");
 			system("cls");
 			break;
