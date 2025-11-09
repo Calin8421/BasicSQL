@@ -10,6 +10,8 @@
 
 // UTILITY FUNCTIONS
 
+std::string scriptEnvFile = "scriptEnv.txt";
+
 bool checkExistenceOFile(std::string fileName)
 {
 	std::ifstream file;
@@ -527,36 +529,6 @@ int sqlQueryConsole()
 	return 0;
 }
 
-void overwriteScriptEnvContent()
-{
-	std::ofstream scriptEnv("scriptEnv.txt");
-	scriptEnv.close();
-	std::cout << "Contents deleted!" << std::endl;
-}
-
-
-void scriptEnvironment()
-{
-	std::cout << "Script Environment not finished" << std::endl;
-	if (!checkExistenceOFile("scriptEnv.txt"))
-	{
-		std::ofstream scriptEnv("scriptEnv.txt");
-		if (scriptEnv.is_open())
-		{
-			std::cout << "Script file created!" << std::endl;
-			scriptEnv.close();
-		}
-		else
-		{
-			std::cout << "Error: Could not create script file." << std::endl;
-		}
-
-	}
-	std::cout << "Please write manually in the file and SAVE!" << std::endl;
-
-}
-
-
 int scriptRunner()
 {
 	std::string line;
@@ -566,7 +538,7 @@ int scriptRunner()
 	bool f = false;
 	std::string flag;
 	int lineNr = 0;
-	scriptEnv.open("scriptEnv.txt");
+	scriptEnv.open(scriptEnvFile);
 	if (scriptEnv.is_open())
 	{
 		while (std::getline(scriptEnv, line))
@@ -600,18 +572,89 @@ int scriptRunner()
 	scriptEnv.close();
 }
 
+void overwriteScriptEnvContent()
+{
+	std::ofstream scriptEnv(scriptEnvFile);
+	scriptEnv.close();
+	std::cout << "Contents deleted!" << std::endl;
+}
 
+void scriptEnvironment()
+{
+	
+	if (!checkExistenceOFile(scriptEnvFile))
+	{
+		std::ofstream scriptEnv(scriptEnvFile);
+		if (scriptEnv.is_open())
+		{
+			std::cout << "Script file created!" << std::endl;
+			scriptEnv.close();
+		}
+		else
+		{
+			std::cout << "Error: Could not create script file." << std::endl;
+		}
+
+	}
+	if (checkExistenceOFile(scriptEnvFile) and isFileEmpty(scriptEnvFile))
+	{
+		std::ofstream writeInEnv;
+		writeInEnv.open(scriptEnvFile);
+		std::string line;
+		std::vector<std::string> lines;
+		std::cout << "Script Environment (insert quit when you are done):" << std::endl;
+		while (std::getline(std::cin, line))
+		{
+			if (line == "QUIT" or line == "quit") break;
+			writeInEnv << line << std::endl;
+			
+		}
+		writeInEnv.close();
+		if (!isFileEmpty(scriptEnvFile))
+		{
+			bool running = true;
+			char c;
+			while (running)
+			{
+				std::cout << "Run script? y/n:";
+				std::cin >> c;
+				switch (c)
+				{
+				case 'y':
+				case 'Y':
+					scriptRunner();
+					running = false;
+					break;
+				case 'n':
+				case 'N':
+					running = false;
+					break;
+				default:
+					system("cls");
+					std::cout << "Undefined. Try again." << std::endl;
+					system("pause");
+					system("cls");
+					break;
+				}
+			}
+		}
+		
+	}
+	//std::cout << "Please write manually in the file and SAVE!" << std::endl;
+
+}
 
 void scriptRunnerMenu()
 {
-	if (checkExistenceOFile("scriptEnv.txt") and !isFileEmpty("scriptEnv.txt"))
+	if (checkExistenceOFile(scriptEnvFile) and !isFileEmpty(scriptEnvFile))
 	{
-		std::cout << "" << std::endl;
-		std::cout << "Overwrite script runner contents? Y/n: ";
+		
 		bool running = true;
 		char c;
 		while (running)
 		{
+			///IN THE FUTURE MAKE IT SO THE FILE WON'T SAVE ANYTHING AND WILL ONLY ACT AS A SCRIPTRUNNER
+			std::cout << "Overwrite script runner contents? Y/n: ";
 			std::cin >> c;
 			switch (c)
 			{
@@ -638,21 +681,19 @@ void scriptRunnerMenu()
 	}
 	else
 		scriptEnvironment();
+	
 
 
 }
 
-
-
-
-
 void saveScriptProg()
 {
-	std::cout << "Save contents of script runner? Y/n: ";
+	
 	bool running = true;
 	char c;
 	while (running)
 	{
+		std::cout << "Save contents of script runner? Y/n: ";
 		std::cin >> c;
 		switch (c)
 		{
@@ -727,7 +768,7 @@ void main()
 			break;
 		case 'X':
 		case 'x':
-			if (checkExistenceOFile("scriptEnv.txt") and !isFileEmpty("scriptEnv.txt"))
+			if (checkExistenceOFile(scriptEnvFile) and !isFileEmpty(scriptEnvFile))
 				saveScriptProg();
 			running = false;
 			break;
