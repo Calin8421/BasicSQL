@@ -184,6 +184,12 @@ int INSERT(std::string instruction, int source = 0)
 	const int expectedNoOfAtributes = 3;
 	bool isTableValid = true;
 
+	if (instruction == "")
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
+		return 9; //WILL HANDLE ERROR HERE LATER
+	}
+
 	if (source == 0 && instruction[instruction.length() - 1] == ')' && instruction[0] == '(')
 	{
 		instruction = instruction.substr(0, instruction.length() - 1);
