@@ -28,7 +28,7 @@ bool isFileEmpty(std::string fileName)
 	return pFile.tellg() == 0 && pFile.peek() == std::ifstream::traits_type::eof();
 }
 
-void returnFirst(std::string instruction, const char delimiter, std::string& result)
+void returnFirst(std::string instruction, const std::string delimiter, std::string& result)
 {
 	int i = instruction.find(delimiter);
 	if (i != -1)
@@ -56,7 +56,52 @@ std::string removeCharacters(std::string instruction, char character)
 	return result;
 }
 
+int count(std::string instruction, char character)
+{
+	int counter = 0;
+	for (int i = 0; i < instruction.length(); i++)
+	{
+		if (instruction[i] == character) counter++;
+	}
+	return counter;
+}
+
+bool isValid(std::string instruction)
+{
+	std::string illegalCharacters = " ,;(){}[]<>!@#$%^&*+-=|\/?:.\"'";
+	int lenghtIllegal = illegalCharacters.length(), lenghtInstruction = instruction.length(), i, j;
+	for (i = 0; i < lenghtIllegal; i++)
+		for (j = 0; j < lenghtInstruction; j++)
+		{
+			if (illegalCharacters[i] == instruction[j]) return false;
+		}
+	return true;
+}
+
+void removeSpaces(std::string& instruction)
+{
+	int i = 0, spacesCount = 0;;
+
+	while (i < instruction.length() && instruction[i] == ' ')
+	{
+		i++;
+	}
+
+	instruction.erase(0, i);
+
+	i = instruction.length() - 1;
+	while (i >= 0 && instruction[i] == ' ')
+	{
+		spacesCount++;
+		i--;
+	}
+
+	instruction.erase(instruction.length() - spacesCount, spacesCount);
+}
+
+// UTILITY FUNCTIONS
 ///DYNAMIC TABLE ALLOC
+
 class rowData
 {
 private:
@@ -69,7 +114,6 @@ private:
 	std::string* textData = nullptr;
 	int* integerData = nullptr;
 	float* floatData = nullptr;
-
 public:
 	void setText(std::string data)
 	{
@@ -122,75 +166,184 @@ private:
 	std::string* attributeNames = nullptr;
 	int totalCount = 0, textCount = 0, integerCount = 0, floatCount = 0;
 	rowData* data = nullptr;
-
+public:
+	Table(std::string tableName)
+	{
+		this->tableName = tableName;
+	}
 };
 unsigned int tableCounter = 0;
 Table* tables = nullptr;
 
-
 ///FUNCTIONS FOR COMMAND INTERPRETER
+int INSERT(std::string instruction, int source = 0)
+{
+	std::string temporary = "";
+	std::string columnAtributes[4] = { "-","-","-","-" };
+	int attributesCounter = 0;
+	const int expectedNoOfAtributes = 3;
+	bool isTableValid = true;
+
+	if (source == 0 && instruction[instruction.length() - 1] == ')' && instruction[0] == '(')
+	{
+		instruction = instruction.substr(0, instruction.length() - 1);
+	}
+	else if (source != 1)
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
+		return 8; //WILL HANDLE ERROR HERE LATER
+	}
+
+	if (count(instruction, ',') == 3)
+	{
+		for (attributesCounter = 0; attributesCounter < expectedNoOfAtributes; attributesCounter++)
+		{
+			instruction = cut(instruction, 1);
+			returnFirst(instruction, ",", temporary);
+			instruction = cut(instruction, temporary.length());
+			removeSpaces(temporary);
+			if (temporary != "" && isValid(temporary))
+			{
+				columnAtributes[attributesCounter] = temporary;
+			}
+			else
+			{
+				std::cout << std::endl << "\033[31mInvalid format, type: one of the attributes is null or contains special characters\033[0m" << std::endl;
+				return 1; //WILL HANDLE ERROR HERE LATER
+			}
+		}
+		instruction = cut(instruction, 1);
+		removeSpaces(instruction);
+		if (isValid(instruction) && instruction != "")
+		{
+			columnAtributes[expectedNoOfAtributes] = instruction;
+			instruction = "";
+		}
+		else
+		{
+			std::cout << std::endl << "\033[31mInvalid format, type: one of the attributes is null or contains special characters\033[0m" << std::endl;
+			return 1; //WILL HANDLE ERROR HERE LATER
+		}
+
+	}
+	else
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: one or more columns doesn't have the right number of attributes or there are empty spaces between the round brackets\033[0m" << std::endl;
+		return 2; //WILL HANDLE ERROR HERE LATER
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		std::cout << "\033[32m" << columnAtributes[i] << " \033[0m";
+	}
+	std::cout << std::endl;
+	return 0;
+}
+
 int CREATE(std::string instruction)
 {
-	//std::string originalInstruction = instruction;
-	//std::string result = "", name = "", type = "", size = "", default_value = "";
-	//std::string tableName = "";
-	//char delimiter = ' ';
-	//int willNeverBeUsedAgain = -1;
-	//std::transform(originalInstruction.begin(), originalInstruction.end(), originalInstruction.begin(), ::toupper);///USE TRANSFORM 
-	////instruction = originalInstruction; WORKING originalInstruction instead of instruction
-	//willNeverBeUsedAgain = originalInstruction.find("table") + sizeof("table") + 1;
-	//originalInstruction = cut(originalInstruction, willNeverBeUsedAgain);
-	//returnFirst(originalInstruction, '(', result);
-	//tableName = result;
-	//result = removeCharacters(result, 'N');
-	//originalInstruction = cut(originalInstruction, result.length());
-	//std::cout << tableName << std::endl;
-	//while (originalInstruction != ")")
-	//{
-	//	returnFirst(originalInstruction, ')', result);
-	//	originalInstruction = cut(originalInstruction, result.length() + 1);
+	std::string originalInstruction = instruction;
+	std::string result = "-", temp = "", name = "", type = "", size = "", default_value = "";
+	std::string tableName = "";
+	char delimiter = ' ';
+	int insertReturnCode = 0, createCode = 1;
+	int willNeverBeUsedAgain = -1;
+	if (originalInstruction.empty())
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
+		return 1; //WILL HANDLE ERROR HERE LATER
+	}
+	std::transform(originalInstruction.begin(), originalInstruction.end(), originalInstruction.begin(), ::toupper);
+	removeSpaces(originalInstruction);
+	if (originalInstruction.find("TABLE") != -1)
+	{
+		if (originalInstruction[sizeof("TABLE") - 1] != ' ')
+		{
+			std::cout << std::endl << "\033[31mInvalid format, type: no space between keyword TABLE and table name\033[0m" << std::endl;
+			return 2; //WILL HANDLE ERROR HERE LATER
+		}
+		originalInstruction = cut(originalInstruction, sizeof("TABLE") - 1);
+		returnFirst(originalInstruction, "(", result);
+		returnFirst(originalInstruction, ")", temp);
+		if (result == "-" || temp == "-")
+		{
+			std::cout << std::endl << "\033[31mInvalid format, type: no ((...))\033[0m" << std::endl;
+			return 3; //WILL HANDLE ERROR HERE LATER
+		}
+		else
+		{
+			instruction = cut(instruction, result.length());
+			originalInstruction = cut(originalInstruction, result.length());
+			removeSpaces(result);
+			tableName = result;
+			if (!isValid(tableName))
+			{
+				std::cout << std::endl << "\033[31mInvalid format, type: special characters found in table name\033[0m" << std::endl;
+				return 4; //WILL HANDLE ERROR HERE LATER
+			}
+			if (tableName == "")
+			{
+				std::cout << std::endl << "\033[31mInvalid format, type: table name is missing\033[0m" << std::endl;
+				return 5; //WILL HANDLE ERROR HERE LATER
+			}
+		}
+	}
+	else
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword TABLE not found\033[0m" << std::endl;
+		return 5; //WILL HANDLE ERROR HERE LATER
+	}
 
-	//	result = cut(result, 1);
-	//	returnFirst(result, ',', name);
-	//	result = cut(result, name.length());
-	//	name = removeCharacters(name, '(');
-	//	name = removeCharacters(name, ' ');
 
-	//	result = cut(result, 1);
-	//	returnFirst(result, ',', type);
-	//	result = cut(result, type.length() + 1);
-	//	type = removeCharacters(type, ',');
-	//	type = removeCharacters(type, ' ');
+	//HANDLES CREATE TABLE NAME() ^^^^^
 
-	//	returnFirst(result, ',', size);
-	//	result = cut(result, size.length());
-	//	size = removeCharacters(size, ',');
-	//	size = removeCharacters(size, ' ');
+	originalInstruction = cut(originalInstruction, 1);
+	originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
 
-	//	returnFirst(result, ')', default_value);
-	//	result = cut(result, default_value.length());
-	//	default_value = removeCharacters(default_value, ')');
-	//	default_value = removeCharacters(default_value, ' ');
-
-	//	std::cout << name << "||" << type << "||" << size << "||" << result << "||" << std::endl;
-	//	//WE HAVE TO SEND EACH DETAIL ABOUT THE ATTRIBUTE INTO THE INSERT FUNCTION TO CREATE A NEW 
-	//	////PROCESS THIS IN INDEX. CREATE TABLE + NAME HERE. MAKE ATRIBUTES IN INDEX!!!!!!!
-	//	
-	//	
-	//}
-
-	std::cout << "Table was created" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	if (count(originalInstruction, '(') != count(originalInstruction, ')') || (originalInstruction[0] != '(' || originalInstruction[originalInstruction.length() - 1] != ')'))
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
+		return 5; //WILL HANDLE ERROR HERE LATER
+	}
+	result = "-";
+	while (originalInstruction != "")
+	{
+		returnFirst(originalInstruction, "),(", result);
+		if (result != "-")
+		{
+			originalInstruction = cut(originalInstruction, result.length() + 2);
+			insertReturnCode = INSERT(result, createCode);
+			if (insertReturnCode != 0)
+			{
+				std::cout << "\033[31mInvalid format, type: in the future the whole CREATE command will be cancelled, until then this message will show up\033[0m" << std::endl;
+				return 6; //WILL HANDLE ERROR HERE LATER, MEANS THAT SOMETHING IS WRONG WITH THE ATTRIBUTES OF ONE COLUMN
+			}
+		}
+		else
+		{
+			if (originalInstruction[originalInstruction.length() - 1] != ')')
+			{
+				std::cout << std::endl << "\033[31mInvalid format, type: there are more characters after the last ')'\033[0m" << std::endl;
+				return 7; //WILL HANDLE ERROR HERE LATER
+			}
+			else
+			{
+				originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
+				insertReturnCode = INSERT(originalInstruction, createCode);
+				if (insertReturnCode != 0)
+				{
+					std::cout << "\033[31mInvalid format, type: in the future the whole CREATE command will be cancelled, until then this message will show up\033[0m" << std::endl;
+					return 6; //WILL HANDLE ERROR HERE LATER, MEANS THAT SOMETHING IS WRONG WITH THE ATTRIBUTES OF ONE COLUMN
+				}
+				originalInstruction = "";
+			}
+		}
+	}
+	//HANDLES ((.,.,.,.),(.,.,.,.),..............,(.,.,.,.)) ^^^^^^^^
 	return 0;
 }
-int INSERT(std::string instruction)
-{
 
-	std::cout << "Table was inserted" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
 
-	return 0;
-}
 int UPDATE(std::string instruction)
 {
 	std::cout << "Table was updated!" << std::endl;
@@ -244,7 +397,7 @@ void showCommands()
 	std::cout << "          | Example: DELETE FROM employees WHERE name = 'John';" << std::endl << std::endl;
 
 	std::cout << "CREATE    | Creates a new database object (e.g., table)." << std::endl;
-	std::cout << "          | Example: CREATE TABLE employees (id INT, name TEXT, salary FLOAT);" << std::endl << std::endl;
+	std::cout << "          | Example: CREATE TABLE employees (id INT, name TEXT, salary FLOAT, DEFAULT_VAL);" << std::endl << std::endl;
 
 	std::cout << "DROP      | Deletes a database object permanently." << std::endl;
 	std::cout << "          | Example: DROP TABLE employees;" << std::endl << std::endl;
