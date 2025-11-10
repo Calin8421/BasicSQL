@@ -430,7 +430,7 @@ void showCommands()
 	std::cout << "<========================================================================================>" << std::endl;
 }
 
-
+///WILL REMAKE COMMAND INTERP WITHOUT STL :P
 enum class SqlOperation { INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY, QUIT, EXIT, CLEAR, HELP, INFO };
 
 SqlOperation getSqlOperation(const std::string& command)
