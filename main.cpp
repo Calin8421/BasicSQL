@@ -8,6 +8,7 @@
 #include <regex>
 #include <vector>
 #include <fstream>
+#include <cctype>
 
 std::string scriptEnvFile = "scriptEnv.txt";
 
@@ -25,6 +26,7 @@ std::string primeToken(std::string instruction)
 	return primeTok;
 }
 
+///TODO FIX MEMORY LEAKS
 std::string restOfInstruction(std::string instruction) {
 	std::string instruct;
 	char* p = NULL;
@@ -62,6 +64,11 @@ bool isFileEmpty(std::string fileName)
 	std::ifstream pFile(fileName);
 	return pFile.tellg() == 0 && pFile.peek() == std::ifstream::traits_type::eof();
 }
+
+
+//Stores std::string::find result(a size_t) into an int(int i = instruction.find(delimiter);).
+//When not found, find returns npos; converting to int is implementation - defined and can become - 1 or overflow.
+//You then compare to - 1. This is not reliable.
 
 void returnFirst(std::string instruction, const std::string delimiter, std::string& result)
 {
@@ -113,6 +120,11 @@ bool isValid(std::string instruction)
 	return true;
 }
 
+//Uses int i = instruction.length() - 1; .
+//When instruction is empty, length() is 0 and 0 - 1 underflows to a negative value and
+//the index access that follows would be out - of - bounds if the loop condition didn’t short - circuit exactly as intended.
+//It “works” due to the i >= 0 check, but the expression used to compute the starting index is still a foot - gun.
+
 void removeSpaces(std::string& instruction)
 {
 	int i = 0, spacesCount = 0;;
@@ -135,8 +147,9 @@ void removeSpaces(std::string& instruction)
 }
 
 // UTILITY FUNCTIONS
-///DYNAMIC TABLE ALLOC
 
+///DYNAMIC TABLE ALLOC
+///DECONSTRUCT THIS
 class rowData
 {
 private:
@@ -294,7 +307,9 @@ int CREATE(std::string instruction)
 		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
 		return 1; //WILL HANDLE ERROR HERE LATER
 	}
-	std::transform(originalInstruction.begin(), originalInstruction.end(), originalInstruction.begin(), ::toupper);
+	std::transform(originalInstruction.begin(), originalInstruction.end(),originalInstruction.begin(),
+		[](unsigned char c) { return std::toupper(c); });
+
 	removeSpaces(originalInstruction);
 	if (originalInstruction.find("TABLE") != -1)
 	{
@@ -467,7 +482,8 @@ void showCommands()
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
 	std::string command = inputCommand;
-	std::transform(command.begin(), command.end(), command.begin(), ::toupper);
+	std::transform(command.begin(), command.end(),command.begin(),
+		[](unsigned char c) { return std::toupper(c); });
 
 
 	if (command == "CREATE")
@@ -520,6 +536,7 @@ std::string commander(std::string inputCommand, std::string instruction, bool& q
 		system("cls");
 		return "CLEAR";
 	}
+	std::cout << "UNKNOWN" << std::endl;
 	return "UNKNOWN";
 }
 
@@ -747,7 +764,7 @@ void startMenu(char& n)
 
 
 ///MAIN PROGRAM
-void main()
+int main()
 {
 	std::string fileName;
 	char c;
@@ -795,5 +812,5 @@ void main()
 	}
 
 	std::cout << "Exiting program. Project made by Gheorghe Calin and Grigore Mihaita Adelin" << std::endl;
-
+	return 0;
 }
