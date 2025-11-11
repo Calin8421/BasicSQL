@@ -9,10 +9,9 @@
 #include <vector>
 #include <fstream>
 
-// UTILITY FUNCTIONS
-
 std::string scriptEnvFile = "scriptEnv.txt";
 
+///FUCNTIONS FOR COMMANDER
 std::string primeToken(std::string instruction)
 {
 	std::string primeTok;
@@ -44,7 +43,7 @@ std::string restOfInstruction(std::string instruction) {
 	return instruct;
 }
 
-
+// UTILITY FUNCTIONS
 
 bool checkExistenceOFile(std::string fileName)
 {
@@ -464,85 +463,7 @@ void showCommands()
 	std::cout << "<========================================================================================>" << std::endl;
 }
 
-///WILL REMAKE COMMAND INTERP WITHOUT STL :P
-//enum class SqlOperation { INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY, QUIT, EXIT, CLEAR, HELP, INFO };
-//
-//SqlOperation getSqlOperation(const std::string& command)
-//{
-//	static const std::unordered_map<std::string, SqlOperation> dispatch = {
-//		{"INSERT", SqlOperation::INSERT},
-//		{"SELECT", SqlOperation::SELECT},
-//		{"DROP", SqlOperation::DROP},
-//		{"CREATE", SqlOperation::CREATE},
-//		{"UPDATE", SqlOperation::UPDATE},
-//		{"DELETE", SqlOperation::DELETE},
-//		{"DISPLAY", SqlOperation::DISPLAY},
-//		{"QUIT", SqlOperation::QUIT},
-//		{"EXIT", SqlOperation::EXIT},
-//		{"CLEAR", SqlOperation::CLEAR},
-//		{"HELP", SqlOperation::HELP},
-//		{"INFO", SqlOperation::INFO}
-//
-//	};
-//
-//	std::string primeToken = command;
-//	std::transform(primeToken.begin(), primeToken.end(), primeToken.begin(), ::toupper);
-//
-//	for (const auto& pair : dispatch)
-//	{
-//		if (pair.first == primeToken)
-//		{
-//			return pair.second;
-//		}
-//	}
-//	return SqlOperation::UNKNOWN;
-//}
-//
-//
-//
-//std::string getSqlOpString(const SqlOperation& op, std::string& instruction, bool& quit)
-//{
-//	switch (op)
-//	{
-//	case SqlOperation::INSERT:
-//		INSERT(instruction);
-//		return "INSERT";
-//	case SqlOperation::UPDATE:
-//		UPDATE(instruction);
-//		return "UPDATE";
-//	case SqlOperation::SELECT:
-//		SELECT(instruction);
-//		return "SELECT";
-//	case SqlOperation::DELETE:
-//		DELETE(instruction);
-//		return "DELETE";
-//	case SqlOperation::DROP:
-//		DROP(instruction);
-//		return "DROP";
-//	case SqlOperation::CREATE:
-//		CREATE(instruction);
-//		return "CREATE";
-// 
-// 
-//	case SqlOperation::DISPLAY:
-//		DISPLAY(instruction);
-//		return "DISPLAY";
-//	case SqlOperation::QUIT:
-//	case SqlOperation::EXIT:
-//		quit = true;
-//		return "QUIT";
-//	case SqlOperation::CLEAR:
-//		system("cls");
-//		return "CLEAR";
-//	case SqlOperation::HELP:
-//	case SqlOperation::INFO:
-//		showCommands();
-//		return "INFO";
-//	default:
-//		std::cout << "UNKNOWN" << std::endl;
-//		return "UNKNOWN";
-//	}
-//}
+
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
 	std::string command = inputCommand;
@@ -731,7 +652,6 @@ void scriptEnvironment()
 		}
 		
 	}
-	//std::cout << "Please write manually in the file and SAVE!" << std::endl;
 
 }
 
