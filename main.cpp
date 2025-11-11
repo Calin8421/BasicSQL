@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string.h>
 #include <unordered_map>
@@ -11,6 +12,39 @@
 // UTILITY FUNCTIONS
 
 std::string scriptEnvFile = "scriptEnv.txt";
+
+std::string primeToken(std::string instruction)
+{
+	std::string primeTok;
+	char* p = NULL;
+	int i = 0;
+	char* cstr = new char[instruction.length() + 1];
+	std::strcpy(cstr, instruction.c_str());
+	p = strtok(cstr, " ");
+	primeTok = p;
+	p = strtok(NULL, " ");
+	return primeTok;
+}
+
+std::string restOfInstruction(std::string instruction) {
+	std::string instruct;
+	char* p = NULL;
+	int i = 0;
+	char* cstr = new char[instruction.length() + 1];
+	std::strcpy(cstr, instruction.c_str());
+	p = strtok(cstr, " ");
+	while (p != NULL)
+	{
+		if (i > 0) instruct = instruct + " " + p;
+		p = strtok(NULL, " ");
+		i++;
+	}
+
+
+	return instruct;
+}
+
+
 
 bool checkExistenceOFile(std::string fileName)
 {
@@ -431,81 +465,141 @@ void showCommands()
 }
 
 ///WILL REMAKE COMMAND INTERP WITHOUT STL :P
-enum class SqlOperation { INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY, QUIT, EXIT, CLEAR, HELP, INFO };
-
-SqlOperation getSqlOperation(const std::string& command)
+//enum class SqlOperation { INSERT, SELECT, UPDATE, DELETE, UNKNOWN, CREATE, DROP, DISPLAY, QUIT, EXIT, CLEAR, HELP, INFO };
+//
+//SqlOperation getSqlOperation(const std::string& command)
+//{
+//	static const std::unordered_map<std::string, SqlOperation> dispatch = {
+//		{"INSERT", SqlOperation::INSERT},
+//		{"SELECT", SqlOperation::SELECT},
+//		{"DROP", SqlOperation::DROP},
+//		{"CREATE", SqlOperation::CREATE},
+//		{"UPDATE", SqlOperation::UPDATE},
+//		{"DELETE", SqlOperation::DELETE},
+//		{"DISPLAY", SqlOperation::DISPLAY},
+//		{"QUIT", SqlOperation::QUIT},
+//		{"EXIT", SqlOperation::EXIT},
+//		{"CLEAR", SqlOperation::CLEAR},
+//		{"HELP", SqlOperation::HELP},
+//		{"INFO", SqlOperation::INFO}
+//
+//	};
+//
+//	std::string primeToken = command;
+//	std::transform(primeToken.begin(), primeToken.end(), primeToken.begin(), ::toupper);
+//
+//	for (const auto& pair : dispatch)
+//	{
+//		if (pair.first == primeToken)
+//		{
+//			return pair.second;
+//		}
+//	}
+//	return SqlOperation::UNKNOWN;
+//}
+//
+//
+//
+//std::string getSqlOpString(const SqlOperation& op, std::string& instruction, bool& quit)
+//{
+//	switch (op)
+//	{
+//	case SqlOperation::INSERT:
+//		INSERT(instruction);
+//		return "INSERT";
+//	case SqlOperation::UPDATE:
+//		UPDATE(instruction);
+//		return "UPDATE";
+//	case SqlOperation::SELECT:
+//		SELECT(instruction);
+//		return "SELECT";
+//	case SqlOperation::DELETE:
+//		DELETE(instruction);
+//		return "DELETE";
+//	case SqlOperation::DROP:
+//		DROP(instruction);
+//		return "DROP";
+//	case SqlOperation::CREATE:
+//		CREATE(instruction);
+//		return "CREATE";
+// 
+// 
+//	case SqlOperation::DISPLAY:
+//		DISPLAY(instruction);
+//		return "DISPLAY";
+//	case SqlOperation::QUIT:
+//	case SqlOperation::EXIT:
+//		quit = true;
+//		return "QUIT";
+//	case SqlOperation::CLEAR:
+//		system("cls");
+//		return "CLEAR";
+//	case SqlOperation::HELP:
+//	case SqlOperation::INFO:
+//		showCommands();
+//		return "INFO";
+//	default:
+//		std::cout << "UNKNOWN" << std::endl;
+//		return "UNKNOWN";
+//	}
+//}
+std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
-	static const std::unordered_map<std::string, SqlOperation> dispatch = {
-		{"INSERT", SqlOperation::INSERT},
-		{"SELECT", SqlOperation::SELECT},
-		{"DROP", SqlOperation::DROP},
-		{"CREATE", SqlOperation::CREATE},
-		{"UPDATE", SqlOperation::UPDATE},
-		{"DELETE", SqlOperation::DELETE},
-		{"DISPLAY", SqlOperation::DISPLAY},
-		{"QUIT", SqlOperation::QUIT},
-		{"EXIT", SqlOperation::EXIT},
-		{"CLEAR", SqlOperation::CLEAR},
-		{"HELP", SqlOperation::HELP},
-		{"INFO", SqlOperation::INFO}
+	std::string command = inputCommand;
+	std::transform(command.begin(), command.end(), command.begin(), ::toupper);
 
-	};
 
-	std::string primeToken = command;
-	std::transform(primeToken.begin(), primeToken.end(), primeToken.begin(), ::toupper);
-
-	for (const auto& pair : dispatch)
+	if (command == "CREATE")
 	{
-		if (pair.first == primeToken)
-		{
-			return pair.second;
-		}
-	}
-	return SqlOperation::UNKNOWN;
-}
-
-
-
-std::string getSqlOpString(const SqlOperation& op, std::string& instruction, bool& quit)
-{
-	switch (op)
-	{
-	case SqlOperation::INSERT:
-		INSERT(instruction);
-		return "INSERT";
-	case SqlOperation::UPDATE:
-		UPDATE(instruction);
-		return "UPDATE";
-	case SqlOperation::SELECT:
-		SELECT(instruction);
-		return "SELECT";
-	case SqlOperation::DELETE:
-		DELETE(instruction);
-		return "DELETE";
-	case SqlOperation::DROP:
-		DROP(instruction);
-		return "DROP";
-	case SqlOperation::CREATE:
 		CREATE(instruction);
 		return "CREATE";
-	case SqlOperation::DISPLAY:
+	}
+	else if (command == "INSERT")
+	{
+		INSERT(instruction);
+		return "INSERT";
+	}
+	else if (command == "UPDATE")
+	{
+		UPDATE(instruction);
+		return "UPDATE";
+	}
+	else if (command == "DROP")
+	{
+		DROP(instruction);
+		return "DROP";
+	}
+	else if (command == "SELECT")
+	{
+		SELECT(instruction);
+		return "SELECT";
+	}
+	else if (command == "DELETE")
+	{
+		DELETE(instruction);
+		return "DELETE";
+	}
+	else if (command == "DISPLAY")
+	{
 		DISPLAY(instruction);
 		return "DISPLAY";
-	case SqlOperation::QUIT:
-	case SqlOperation::EXIT:
+	}
+	else if (command == "QUIT" or command == "EXIT")
+	{
 		quit = true;
 		return "QUIT";
-	case SqlOperation::CLEAR:
-		system("cls");
-		return "CLEAR";
-	case SqlOperation::HELP:
-	case SqlOperation::INFO:
+	}
+	else if (command == "INFO" or command == "HELP")
+	{
 		showCommands();
 		return "INFO";
-	default:
-		std::cout << "UNKNOWN" << std::endl;
-		return "UNKNOWN";
 	}
+	else if (command == "CLEAR")
+	{
+		system("cls");
+		return "CLEAR";
+	}
+	return "UNKNOWN";
 }
 
 
@@ -517,13 +611,11 @@ int sqlQueryConsole()
 	std::string firstToken;
 	std::string userInstruction;
 	std::getline(std::cin, userInput);
-	std::istringstream iss(userInput);
-	iss >> firstToken;
-	//std::getline(iss, userInstruction);
-	std::getline(iss >> std::ws, userInstruction);///ignores the spaces after the first word
+	firstToken = primeToken(userInput);
+	userInstruction = restOfInstruction(userInput);
 	std::cout << std::endl;
 	bool quit = false;
-	getSqlOpString(getSqlOperation(firstToken), userInstruction, quit);
+	commander(firstToken, userInstruction ,quit);
 	if (!quit) sqlQueryConsole();
 
 	return 0;
@@ -546,10 +638,9 @@ int scriptRunner()
 			if (!line.empty())
 			{
 				lineNr++;
-				std::istringstream iss(line);
-				iss >> firstToken;
-				std::getline(iss >> std::ws, scriptInstruction);
-				flag = getSqlOpString(getSqlOperation(firstToken), scriptInstruction, f);
+				firstToken = primeToken(line);
+				scriptInstruction = restOfInstruction(line);
+				flag = commander(firstToken, scriptInstruction, f);
 				if (flag == "UNKNOWN")
 				{
 					std::cout << "Unknown command on line " << lineNr << std::endl;
