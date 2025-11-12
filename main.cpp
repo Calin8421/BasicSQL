@@ -17,16 +17,16 @@ std::string primeToken(std::string instruction)
 {
 	std::string primeTok;
 	char* p = NULL;
-	int i = 0;
 	char* cstr = new char[instruction.length() + 1];
 	std::strcpy(cstr, instruction.c_str());
 	p = strtok(cstr, " ");
-	primeTok = p;
-	p = strtok(NULL, " ");
+	if(p!=NULL) primeTok = p;
+	delete[] cstr;
 	return primeTok;
+	
 }
 
-///TODO FIX MEMORY LEAKS
+
 std::string restOfInstruction(std::string instruction) {
 	std::string instruct;
 	char* p = NULL;
@@ -41,7 +41,7 @@ std::string restOfInstruction(std::string instruction) {
 		i++;
 	}
 
-
+	delete[] cstr;
 	return instruct;
 }
 
