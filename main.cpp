@@ -47,6 +47,14 @@ std::string restOfInstruction(std::string instruction) {
 
 // UTILITY FUNCTIONS
 
+void overwriteFile(std::string fileName)
+{
+	std::ofstream scriptEnv(fileName);
+	scriptEnv.close();
+	std::cout << "\033[31mContents deleted!\033[0m" << std::endl;
+}
+
+
 bool checkExistenceOFile(std::string fileName)
 {
 	std::ifstream file;
@@ -332,6 +340,7 @@ int CREATE(std::string instruction)
 			originalInstruction = cut(originalInstruction, result.length());
 			removeSpaces(result);
 			tableName = result;
+			
 			if (!isValid(tableName))
 			{
 				std::cout << std::endl << "\033[31mInvalid format, type: special characters found in table name\033[0m" << std::endl;
@@ -352,7 +361,7 @@ int CREATE(std::string instruction)
 
 
 	//HANDLES CREATE TABLE NAME() ^^^^^
-
+	std::cout << tableName << std::endl;///DISPLAYED THE NAME TO SHOW IT WORKS
 	originalInstruction = cut(originalInstruction, 1);
 	originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
 
@@ -368,6 +377,7 @@ int CREATE(std::string instruction)
 		if (result != "-")
 		{
 			originalInstruction = cut(originalInstruction, result.length() + 2);
+			
 			insertReturnCode = INSERT(result, createCode);
 			if (insertReturnCode != 0)
 			{
@@ -559,6 +569,7 @@ int sqlQueryConsole()
 	return 0;
 }
 
+///STILL WORK IN PROGRESS BUT WORKS
 int scriptRunner()
 {
 	std::string line;
@@ -583,11 +594,10 @@ int scriptRunner()
 				{
 					std::cout << "Unknown command on line " << lineNr << std::endl;
 					std::cout << line << std::endl;
+					scriptEnv.close();
 					return 0;
 				}
-				/*	std::cout << "Line: " << line << std::endl;
-					std::cout << "First token: " << firstToken << std::endl;
-					std::cout << "Instruction: " << scriptInstruction << std::endl;*/
+		
 			}
 
 		}
@@ -595,17 +605,9 @@ int scriptRunner()
 	}
 	else
 		std::cout << "File not found or couldn't be open" << std::endl;///add existing checker;
-	/*std::cout << "Printed: <script runner here>" << std::endl;
-	scriptEnv << "script runner here";*/
+	
 
 	scriptEnv.close();
-}
-
-void overwriteScriptEnvContent()
-{
-	std::ofstream scriptEnv(scriptEnvFile);
-	scriptEnv.close();
-	std::cout << "Contents deleted!" << std::endl;
 }
 
 void scriptEnvironment()
@@ -634,7 +636,13 @@ void scriptEnvironment()
 		std::cout << "\033[32mScript Environment (insert quit when you are done):\033[0m" << std::endl;
 		while (std::getline(std::cin, line))
 		{
-			if (line == "QUIT" or line == "quit") break;
+			std::transform(line.begin(), line.end(), line.begin(),
+				[](unsigned char c) { return std::toupper(c); });
+			if (line == "QUIT" or line == "EXIT")
+			{
+				std::cout << "Exiting script environment." << std::endl;
+				break;
+			}
 			writeInEnv << line << std::endl;
 			
 		}
@@ -688,7 +696,7 @@ void scriptRunnerMenu()
 			{
 			case 'y':
 			case 'Y':
-				overwriteScriptEnvContent();
+				overwriteFile("scriptEnv.txt");
 				scriptEnvironment();
 				running = false;
 				break;
@@ -731,7 +739,7 @@ void saveScriptProg()
 			break;
 		case 'n':
 		case 'N':
-			overwriteScriptEnvContent();
+			overwriteFile("scriptEnv.txt");
 			running = false;
 			break;
 		default:
