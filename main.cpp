@@ -12,6 +12,15 @@
 
 std::string scriptEnvFile = "scriptEnv.txt";
 
+void toUpperString(std::string& instruction)
+{
+	int size = instruction.length();
+	for (int i = 0; i < size; i++)
+	{
+		instruction[i] = toupper(instruction[i]);
+	}
+}
+
 ///FUCNTIONS FOR COMMANDER
 std::string primeToken(std::string instruction)
 {
@@ -224,6 +233,7 @@ unsigned int tableCounter = 0;
 Table* tables = nullptr;
 
 ///FUNCTIONS FOR COMMAND INTERPRETER
+///FUNCTIONS FOR COMMAND INTERPRETER
 int INSERT(std::string instruction, int source = 0)
 {
 	std::string temporary = "";
@@ -240,9 +250,10 @@ int INSERT(std::string instruction, int source = 0)
 
 	if (source == 0 && instruction[instruction.length() - 1] == ')' && instruction[0] == '(')
 	{
+		toUpperString(instruction);
 		instruction = instruction.substr(0, instruction.length() - 1);
 	}
-	else if (source != 1)
+	else if (source != 0 && (instruction[instruction.length() - 1] != ')' && instruction[0] != '('))
 	{
 		std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
 		return 8; //WILL HANDLE ERROR HERE LATER
@@ -296,6 +307,7 @@ int INSERT(std::string instruction, int source = 0)
 
 int CREATE(std::string instruction)
 {
+	std::string tableWord = "TABLE";
 	std::string originalInstruction = instruction;
 	std::string result = "-", temp = "", name = "", type = "", size = "", default_value = "";
 	std::string tableName = "";
@@ -307,18 +319,17 @@ int CREATE(std::string instruction)
 		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
 		return 1; //WILL HANDLE ERROR HERE LATER
 	}
-	std::transform(originalInstruction.begin(), originalInstruction.end(),originalInstruction.begin(),
-		[](unsigned char c) { return std::toupper(c); });
-
+	toUpperString(originalInstruction);
 	removeSpaces(originalInstruction);
-	if (originalInstruction.find("TABLE") != -1)
+	if (originalInstruction.find(tableWord) != -1)
 	{
-		if (originalInstruction[sizeof("TABLE") - 1] != ' ')
+		if (originalInstruction[tableWord.length()] != ' ')
 		{
+			std::cout << std::endl << "-------------------------------" << tableWord.length() << "----------------------------------------" << std::endl;
 			std::cout << std::endl << "\033[31mInvalid format, type: no space between keyword TABLE and table name\033[0m" << std::endl;
 			return 2; //WILL HANDLE ERROR HERE LATER
 		}
-		originalInstruction = cut(originalInstruction, sizeof("TABLE") - 1);
+		originalInstruction = cut(originalInstruction, tableWord.length());
 		returnFirst(originalInstruction, "(", result);
 		returnFirst(originalInstruction, ")", temp);
 		if (result == "-" || temp == "-")
@@ -379,7 +390,7 @@ int CREATE(std::string instruction)
 		{
 			if (originalInstruction[originalInstruction.length() - 1] != ')')
 			{
-				std::cout << std::endl << "\033[31mInvalid format, type: there are more characters after the last ')'\033[" << std::endl;
+				std::cout << std::endl << "\033[31mInvalid format, type: there are more characters after the last ')'\033[0m" << std::endl;
 				return 7; //WILL HANDLE ERROR HERE LATER
 			}
 			else
@@ -398,6 +409,7 @@ int CREATE(std::string instruction)
 	//HANDLES ((.,.,.,.),(.,.,.,.),..............,(.,.,.,.)) ^^^^^^^^
 	return 0;
 }
+
 
 
 int UPDATE(std::string instruction)
