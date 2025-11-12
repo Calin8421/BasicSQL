@@ -47,6 +47,13 @@ std::string restOfInstruction(std::string instruction) {
 
 // UTILITY FUNCTIONS
 
+std::string toUpper(std::string& givenString)
+{
+	std::transform(givenString.begin(), givenString.end(), givenString.begin(),
+		[](unsigned char c) { return std::toupper(c); });
+	return givenString;
+}
+
 void overwriteFile(std::string fileName)
 {
 	std::ofstream scriptEnv(fileName);
@@ -315,8 +322,7 @@ int CREATE(std::string instruction)
 		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
 		return 1; //WILL HANDLE ERROR HERE LATER
 	}
-	std::transform(originalInstruction.begin(), originalInstruction.end(),originalInstruction.begin(),
-		[](unsigned char c) { return std::toupper(c); });
+	toUpper(originalInstruction);
 
 	removeSpaces(originalInstruction);
 	if (originalInstruction.find("TABLE") != -1)
@@ -492,8 +498,7 @@ void showCommands()
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
 	std::string command = inputCommand;
-	std::transform(command.begin(), command.end(),command.begin(),
-		[](unsigned char c) { return std::toupper(c); });
+	toUpper(command);
 
 
 	if (command == "CREATE")
@@ -636,8 +641,7 @@ void scriptEnvironment()
 		std::cout << "\033[32mScript Environment (insert quit when you are done):\033[0m" << std::endl;
 		while (std::getline(std::cin, line))
 		{
-			std::transform(line.begin(), line.end(), line.begin(),
-				[](unsigned char c) { return std::toupper(c); });
+			toUpper(line);
 			if (line == "QUIT" or line == "EXIT")
 			{
 				std::cout << "Exiting script environment." << std::endl;
