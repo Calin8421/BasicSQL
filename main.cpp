@@ -12,30 +12,21 @@
 
 std::string scriptEnvFile = "scriptEnv.txt";
 
-void toUpperString(std::string& instruction)
-{
-	int size = instruction.length();
-	for (int i = 0; i < size; i++)
-	{
-		instruction[i] = toupper(instruction[i]);
-	}
-}
-
 ///FUCNTIONS FOR COMMANDER
 std::string primeToken(std::string instruction)
 {
 	std::string primeTok;
 	char* p = NULL;
-	int i = 0;
 	char* cstr = new char[instruction.length() + 1];
 	std::strcpy(cstr, instruction.c_str());
 	p = strtok(cstr, " ");
-	primeTok = p;
-	p = strtok(NULL, " ");
+	if(p!=NULL) primeTok = p;
+	delete[] cstr;
 	return primeTok;
+	
 }
 
-///TODO FIX MEMORY LEAKS
+
 std::string restOfInstruction(std::string instruction) {
 	std::string instruct;
 	char* p = NULL;
@@ -50,11 +41,26 @@ std::string restOfInstruction(std::string instruction) {
 		i++;
 	}
 
-
+	delete[] cstr;
 	return instruct;
 }
 
 // UTILITY FUNCTIONS
+
+std::string toUpper(std::string& givenString)
+{
+	std::transform(givenString.begin(), givenString.end(), givenString.begin(),
+		[](unsigned char c) { return std::toupper(c); });
+	return givenString;
+}
+
+void overwriteFile(std::string fileName)
+{
+	std::ofstream scriptEnv(fileName);
+	scriptEnv.close();
+	std::cout << "\033[31mContents deleted!\033[0m" << std::endl;
+}
+
 
 bool checkExistenceOFile(std::string fileName)
 {
@@ -233,7 +239,6 @@ unsigned int tableCounter = 0;
 Table* tables = nullptr;
 
 ///FUNCTIONS FOR COMMAND INTERPRETER
-///FUNCTIONS FOR COMMAND INTERPRETER
 int INSERT(std::string instruction, int source = 0)
 {
 	std::string temporary = "";
@@ -248,9 +253,9 @@ int INSERT(std::string instruction, int source = 0)
 		return 9; //WILL HANDLE ERROR HERE LATER
 	}
 
+
 	if (source == 0 && instruction[instruction.length() - 1] == ')' && instruction[0] == '(')
 	{
-		toUpperString(instruction);
 		instruction = instruction.substr(0, instruction.length() - 1);
 	}
 	else if (source != 0 && (instruction[instruction.length() - 1] != ')' && instruction[0] != '('))
@@ -319,7 +324,8 @@ int CREATE(std::string instruction)
 		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
 		return 1; //WILL HANDLE ERROR HERE LATER
 	}
-	toUpperString(originalInstruction);
+	toUpper(originalInstruction);
+
 	removeSpaces(originalInstruction);
 	if (originalInstruction.find(tableWord) != -1)
 	{
@@ -343,6 +349,7 @@ int CREATE(std::string instruction)
 			originalInstruction = cut(originalInstruction, result.length());
 			removeSpaces(result);
 			tableName = result;
+			
 			if (!isValid(tableName))
 			{
 				std::cout << std::endl << "\033[31mInvalid format, type: special characters found in table name\033[0m" << std::endl;
@@ -363,7 +370,7 @@ int CREATE(std::string instruction)
 
 
 	//HANDLES CREATE TABLE NAME() ^^^^^
-
+	std::cout << tableName << std::endl;///DISPLAYED THE NAME TO SHOW IT WORKS
 	originalInstruction = cut(originalInstruction, 1);
 	originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
 
@@ -379,6 +386,7 @@ int CREATE(std::string instruction)
 		if (result != "-")
 		{
 			originalInstruction = cut(originalInstruction, result.length() + 2);
+			
 			insertReturnCode = INSERT(result, createCode);
 			if (insertReturnCode != 0)
 			{
@@ -494,8 +502,7 @@ void showCommands()
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
 	std::string command = inputCommand;
-	std::transform(command.begin(), command.end(),command.begin(),
-		[](unsigned char c) { return std::toupper(c); });
+	toUpper(command);
 
 
 	if (command == "CREATE")
@@ -571,6 +578,7 @@ int sqlQueryConsole()
 	return 0;
 }
 
+///STILL WORK IN PROGRESS BUT WORKS
 int scriptRunner()
 {
 	std::string line;
@@ -595,11 +603,10 @@ int scriptRunner()
 				{
 					std::cout << "Unknown command on line " << lineNr << std::endl;
 					std::cout << line << std::endl;
+					scriptEnv.close();
 					return 0;
 				}
-				/*	std::cout << "Line: " << line << std::endl;
-					std::cout << "First token: " << firstToken << std::endl;
-					std::cout << "Instruction: " << scriptInstruction << std::endl;*/
+		
 			}
 
 		}
@@ -607,17 +614,9 @@ int scriptRunner()
 	}
 	else
 		std::cout << "File not found or couldn't be open" << std::endl;///add existing checker;
-	/*std::cout << "Printed: <script runner here>" << std::endl;
-	scriptEnv << "script runner here";*/
+	
 
 	scriptEnv.close();
-}
-
-void overwriteScriptEnvContent()
-{
-	std::ofstream scriptEnv(scriptEnvFile);
-	scriptEnv.close();
-	std::cout << "Contents deleted!" << std::endl;
 }
 
 void scriptEnvironment()
@@ -646,7 +645,12 @@ void scriptEnvironment()
 		std::cout << "\033[32mScript Environment (insert quit when you are done):\033[0m" << std::endl;
 		while (std::getline(std::cin, line))
 		{
-			if (line == "QUIT" or line == "quit") break;
+			toUpper(line);
+			if (line == "QUIT" or line == "EXIT")
+			{
+				std::cout << "Exiting script environment." << std::endl;
+				break;
+			}
 			writeInEnv << line << std::endl;
 			
 		}
@@ -700,7 +704,7 @@ void scriptRunnerMenu()
 			{
 			case 'y':
 			case 'Y':
-				overwriteScriptEnvContent();
+				overwriteFile("scriptEnv.txt");
 				scriptEnvironment();
 				running = false;
 				break;
@@ -743,7 +747,7 @@ void saveScriptProg()
 			break;
 		case 'n':
 		case 'N':
-			overwriteScriptEnvContent();
+			overwriteFile("scriptEnv.txt");
 			running = false;
 			break;
 		default:
