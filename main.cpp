@@ -54,13 +54,6 @@ std::string toUpper(std::string& givenString)
 	return givenString;
 }
 
-void overwriteFile(std::string fileName)
-{
-	std::ofstream scriptEnv(fileName);
-	scriptEnv.close();
-	std::cout << "\033[31mContents deleted!\033[0m" << std::endl;
-}
-
 
 bool checkExistenceOFile(std::string fileName)
 {
@@ -74,11 +67,29 @@ bool checkExistenceOFile(std::string fileName)
 	return false;
 }
 
-bool isFileEmpty(std::string fileName)
+bool isFileEmpty(const std::string& fileName)
 {
-	std::ifstream pFile(fileName);
-	return pFile.tellg() == 0 && pFile.peek() == std::ifstream::traits_type::eof();
+	std::ifstream pFile(fileName, std::ios::ate | std::ios::binary);
+	if (!pFile.is_open())
+		return true;  
+
+	return pFile.tellg() == 0;
 }
+
+bool overwriteFile(const std::string& fileName)
+{
+	// open and truncate
+	std::ofstream scriptEnv(fileName, std::ios::out | std::ios::trunc);
+	if (!scriptEnv.is_open())
+	{
+		std::cout << "Error: could not open file for overwrite\n";
+		return false;
+	}
+
+	std::cout << "\033[31mContents deleted!\033[0m" << std::endl;
+	return true;        // file is empty at this point
+}
+
 
 
 //Stores std::string::find result(a size_t) into an int(int i = instruction.find(delimiter);).
@@ -498,7 +509,7 @@ void showCommands()
 	std::cout << "<========================================================================================>" << std::endl;
 }
 
-
+///make this in to a int to return the error codes from the sql functions
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
 	std::string command = inputCommand;
@@ -509,6 +520,7 @@ std::string commander(std::string inputCommand, std::string instruction, bool& q
 	{
 		CREATE(instruction);
 		return "CREATE";
+		///ex: return CREATE(instruction);
 	}
 	else if (command == "INSERT")
 	{
@@ -645,8 +657,11 @@ void scriptEnvironment()
 		std::cout << "\033[32mScript Environment (insert quit when you are done):\033[0m" << std::endl;
 		while (std::getline(std::cin, line))
 		{
+			if (line.empty())
+				continue; 
+
 			toUpper(line);
-			if (line == "QUIT" or line == "EXIT")
+			if (primeToken(line) == "QUIT" || primeToken(line) == "EXIT")
 			{
 				std::cout << "Exiting script environment." << std::endl;
 				break;
@@ -704,8 +719,13 @@ void scriptRunnerMenu()
 			{
 			case 'y':
 			case 'Y':
-				overwriteFile("scriptEnv.txt");
-				scriptEnvironment();
+				if (overwriteFile(scriptEnvFile))
+				{
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					scriptEnvironment();
+				}
+				else
+					std::cout << "couldn't delete file" << std::endl;
 				running = false;
 				break;
 			case 'n':
@@ -732,7 +752,6 @@ void scriptRunnerMenu()
 
 void saveScriptProg()
 {
-	
 	bool running = true;
 	char c;
 	while (running)
@@ -747,7 +766,7 @@ void saveScriptProg()
 			break;
 		case 'n':
 		case 'N':
-			overwriteFile("scriptEnv.txt");
+			overwriteFile(scriptEnvFile);
 			running = false;
 			break;
 		default:
@@ -783,13 +802,13 @@ void startMenu(char& n)
 int main()
 {
 	std::string fileName;
-	char c;
+	char c[1];
 	bool running = true;
 
 	while (running) {
 
-		startMenu(c);
-		switch (c)
+		startMenu(c[0]);
+		switch (c[0])
 		{
 		case '1':
 			system("cls");
