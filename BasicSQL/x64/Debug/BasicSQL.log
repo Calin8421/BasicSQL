@@ -3,12 +3,12 @@ C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(90,8): warning C4267: 'initializin
 C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(128,34): warning C4129: '/': unrecognized character escape sequence
 C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(129,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(129,68): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(154,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(275,53): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(343,66): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(353,48): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(354,64): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(393,67): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(625,1): warning C4715: 'scriptRunner': not all control paths return a value
-  LINK : C:\Users\Mihai\source\repos\BasicSQL\x64\Debug\BasicSQL.exe not found or not built by the last incremental link; performing full link
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(156,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(199,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(349,68): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(359,48): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(360,64): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(392,68): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(633,1): warning C4715: 'scriptRunner': not all control paths return a value
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(432,1): warning C4715: 'CREATE': not all control paths return a value
   BasicSQL.vcxproj -> C:\Users\Mihai\source\repos\BasicSQL\x64\Debug\BasicSQL.exe

@@ -125,7 +125,7 @@ int count(std::string instruction, char character)
 
 bool isValid(std::string instruction)
 {
-	std::string illegalCharacters = " ,;(){}[]<>!@#$%^&*+-=|\/?:.\"'";
+	std::string illegalCharacters = " ,;(){}[]<>!@#$%^&*+-=|\/?:.\"";
 	int lenghtIllegal = illegalCharacters.length(), lenghtInstruction = instruction.length(), i, j;
 	for (i = 0; i < lenghtIllegal; i++)
 		for (j = 0; j < lenghtInstruction; j++)
@@ -134,6 +134,8 @@ bool isValid(std::string instruction)
 		}
 	return true;
 }
+
+
 
 //Uses int i = instruction.length() - 1; .
 //When instruction is empty, length() is 0 and 0 - 1 underflows to a negative value and
@@ -161,6 +163,81 @@ void removeSpaces(std::string& instruction)
 	instruction.erase(instruction.length() - spacesCount, spacesCount);
 }
 
+int createColumn(std::string instruction, int source = 0)
+{
+	std::string temporary = "";
+	std::string columnAtributes[4] = { "-","-","-","-" };
+	int attributesCounter = 0;
+	const int expectedNoOfAtributes = 3;
+	bool isTableValid = true;
+	removeSpaces(instruction);
+	if (instruction == "")
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
+		return 9; //WILL HANDLE ERROR HERE LATER
+	}
+	//std::cout << std::endl << "------------------" << instruction[instruction.length()-1]<<" "<<instruction[0] << "-----------------------" << std::endl;
+	if (source == 0 && instruction[instruction.length() - 1] == ')' && instruction[0] == '(')
+	{
+		instruction = instruction.substr(1, instruction.length() - 1);
+	}
+	else if (source == 1 && instruction[0] == '(')
+	{
+		instruction = cut(instruction, 1);
+	}
+	else
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
+		return 8; //WILL HANDLE ERROR HERE LATER
+	}
+
+	if (count(instruction, ',') == 3)
+	{
+		for (attributesCounter = 0; attributesCounter < expectedNoOfAtributes; attributesCounter++)
+		{
+			returnFirst(instruction, ",", temporary);
+			instruction = cut(instruction, temporary.length() + 1);
+			removeSpaces(temporary);
+			if (temporary != "" && isValid(temporary))
+			{
+				columnAtributes[attributesCounter] = temporary;
+			}
+			else
+			{
+				std::cout << std::endl << "\033[31mInvalid format, type: one of the attributes is null or contains special characters\033[0m" << std::endl;
+				return 1; //WILL HANDLE ERROR HERE LATER
+			}
+		}
+		if (source == 0)
+		{
+			instruction = instruction.substr(0, instruction.length() - 1);
+		}
+		removeSpaces(instruction);
+		if (isValid(instruction) && instruction != "")
+		{
+			columnAtributes[expectedNoOfAtributes] = instruction;
+			instruction = "";
+		}
+		else
+		{
+			std::cout << std::endl << "\033[31mInvalid format, type: one of the attributes is null or contains special characters\033[0m" << std::endl;
+			return 1; //WILL HANDLE ERROR HERE LATER
+		}
+
+	}
+	else
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: one or more columns doesn't have the right number of attributes or there are empty spaces between the round brackets\033[0m" << std::endl;
+		return 2; //WILL HANDLE ERROR HERE LATER
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		std::cout << "\033[32m" << columnAtributes[i] << " \033[0m";
+	}
+	std::cout << std::endl;
+	return 0;
+}
 // UTILITY FUNCTIONS
 
 ///DYNAMIC TABLE ALLOC
@@ -241,77 +318,8 @@ Table* tables = nullptr;
 ///FUNCTIONS FOR COMMAND INTERPRETER
 int INSERT(std::string instruction, int source = 0)
 {
-	std::string temporary = "";
-	std::string columnAtributes[4] = { "-","-","-","-" };
-	int attributesCounter = 0;
-	const int expectedNoOfAtributes = 3;
-	bool isTableValid = true;
-	removeSpaces(instruction);
-	if (instruction == "")
-	{
-		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
-		return 9; //WILL HANDLE ERROR HERE LATER
-	}
-	//std::cout << std::endl << "------------------" << instruction[instruction.length()-1]<<" "<<instruction[0] << "-----------------------" << std::endl;
-	if (source == 0 && instruction[instruction.length() - 1] == ')' && instruction[0]=='(')
-	{
-		instruction = instruction.substr(1, instruction.length() - 1);
-	}
-	else if (source == 1 && instruction[0] == '(')
-	{
-		instruction=cut(instruction, 1);
-	}
-	else
-	{
-		std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
-		return 8; //WILL HANDLE ERROR HERE LATER
-	}
-
-	if (count(instruction, ',') == 3)
-	{
-		for (attributesCounter = 0; attributesCounter < expectedNoOfAtributes; attributesCounter++)
-		{
-			returnFirst(instruction, ",", temporary);
-			instruction = cut(instruction, temporary.length()+1);
-			removeSpaces(temporary);
-			if (temporary != "" && isValid(temporary))
-			{
-				columnAtributes[attributesCounter] = temporary;
-			}
-			else
-			{
-				std::cout << std::endl << "\033[31mInvalid format, type: one of the attributes is null or contains special characters\033[0m" << std::endl;
-				return 1; //WILL HANDLE ERROR HERE LATER
-			}
-		}
-		if (source == 0)
-		{
-			instruction = instruction.substr(0, instruction.length() - 1);
-		}
-		removeSpaces(instruction);
-		if (isValid(instruction) && instruction != "")
-		{
-			columnAtributes[expectedNoOfAtributes] = instruction;
-			instruction = "";
-		}
-		else
-		{
-			std::cout << std::endl << "\033[31mInvalid format, type: one of the attributesHERE is null or contains special characters\033[0m" << std::endl;
-			return 1; //WILL HANDLE ERROR HERE LATER
-		}
-
-	}
-	else
-	{
-		std::cout << std::endl << "\033[31mInvalid format, type: one or more columns doesn't have the right number of attributes or there are empty spaces between the round brackets\033[0m" << std::endl;
-		return 2; //WILL HANDLE ERROR HERE LATER
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		std::cout << "\033[32m" << columnAtributes[i] << " \033[0m";
-	}
-	std::cout << std::endl;
+	std::cout << "Insert function" << std::endl;
+	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
 
@@ -329,18 +337,16 @@ int CREATE(std::string instruction)
 		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
 		return 1; //WILL HANDLE ERROR HERE LATER
 	}
-	toUpper(originalInstruction);
-
-	removeSpaces(originalInstruction);
+	
 	if (originalInstruction.find(tableWord) != -1)
 	{
-		if (originalInstruction[tableWord.length()] != ' ')
+		if (originalInstruction[tableWord.length()+1] != ' ')
 		{
-			std::cout << std::endl << "-------------------------------" << tableWord.length() << "----------------------------------------" << std::endl;
 			std::cout << std::endl << "\033[31mInvalid format, type: no space between keyword TABLE and table name\033[0m" << std::endl;
 			return 2; //WILL HANDLE ERROR HERE LATER
 		}
-		originalInstruction = cut(originalInstruction, tableWord.length());
+
+		originalInstruction = cut(originalInstruction, tableWord.length()+1);
 		returnFirst(originalInstruction, "(", result);
 		returnFirst(originalInstruction, ")", temp);
 		if (result == "-" || temp == "-")
@@ -354,7 +360,7 @@ int CREATE(std::string instruction)
 			originalInstruction = cut(originalInstruction, result.length());
 			removeSpaces(result);
 			tableName = result;
-			
+
 			if (!isValid(tableName))
 			{
 				std::cout << std::endl << "\033[31mInvalid format, type: special characters found in table name\033[0m" << std::endl;
@@ -363,64 +369,66 @@ int CREATE(std::string instruction)
 			if (tableName == "")
 			{
 				std::cout << std::endl << "\033[31mInvalid format, type: table name is missing\033[0m" << std::endl;
-				return 5; //WILL HANDLE ERROR HERE LATER
+				return 4; //WILL HANDLE ERROR HERE LATER
 			}
 		}
-	}
-	else
-	{
-		std::cout << std::endl << "\033[31mInvalid format, type: keyword TABLE not found\033[0m" << std::endl;
-		return 5; //WILL HANDLE ERROR HERE LATER
-	}
+		//HANDLES CREATE TABLE NAME() ^^^^^
 
+		std::cout << tableName << std::endl;///DISPLAYED THE NAME TO SHOW IT WORKS
+		originalInstruction = cut(originalInstruction, 1);
+		originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
 
-	//HANDLES CREATE TABLE NAME() ^^^^^
-	std::cout << tableName << std::endl;///DISPLAYED THE NAME TO SHOW IT WORKS
-	originalInstruction = cut(originalInstruction, 1);
-	originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
-
-	if (count(originalInstruction, '(') != count(originalInstruction, ')') || (originalInstruction[0] != '(' || originalInstruction[originalInstruction.length() - 1] != ')'))
-	{
-		std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
-		return 5; //WILL HANDLE ERROR HERE LATER
-	}
-	result = "-";
-	while (originalInstruction != "")
-	{
-		returnFirst(originalInstruction, "),(", result);
-		if (result != "-")
+		if (count(originalInstruction, '(') != count(originalInstruction, ')') || (originalInstruction[0] != '(' || originalInstruction[originalInstruction.length() - 1] != ')'))
 		{
-			originalInstruction = cut(originalInstruction, result.length() + 2);
-			
-			insertReturnCode = INSERT(result, createCode);
-			if (insertReturnCode != 0)
-			{
-				std::cout << "\033[31mInvalid format, type: in the future the whole CREATE command will be cancelled, until then this message will show up\033[0m" << std::endl;
-				return 6; //WILL HANDLE ERROR HERE LATER, MEANS THAT SOMETHING IS WRONG WITH THE ATTRIBUTES OF ONE COLUMN
-			}
+			std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
+			return 5; //WILL HANDLE ERROR HERE LATER
 		}
-		else
+		result = "-";
+		while (originalInstruction != "")
 		{
-			if (originalInstruction[originalInstruction.length() - 1] != ')')
+			returnFirst(originalInstruction, "), (", result);
+			if (result != "-")
 			{
-				std::cout << std::endl << "\033[31mInvalid format, type: there are more characters after the last ')'\033[0m" << std::endl;
-				return 7; //WILL HANDLE ERROR HERE LATER
-			}
-			else
-			{
-				originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
-				insertReturnCode = INSERT(originalInstruction, createCode);
+				originalInstruction = cut(originalInstruction, result.length() + 2);
+
+				insertReturnCode = createColumn(result, createCode);
 				if (insertReturnCode != 0)
 				{
 					std::cout << "\033[31mInvalid format, type: in the future the whole CREATE command will be cancelled, until then this message will show up\033[0m" << std::endl;
 					return 6; //WILL HANDLE ERROR HERE LATER, MEANS THAT SOMETHING IS WRONG WITH THE ATTRIBUTES OF ONE COLUMN
 				}
-				originalInstruction = "";
+			}
+			else
+			{
+				if (originalInstruction[originalInstruction.length() - 1] != ')')
+				{
+					std::cout << std::endl << "\033[31mInvalid format, type: there are more characters after the last ')'\033[0m" << std::endl;
+					return 7; //WILL HANDLE ERROR HERE LATER
+				}
+				else
+				{
+					originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
+					insertReturnCode = createColumn(originalInstruction, createCode);
+					if (insertReturnCode != 0)
+					{
+						std::cout << "\033[31mInvalid format, type: in the future the whole CREATE command will be cancelled, until then this message will show up\033[0m" << std::endl;
+						return 6; //WILL HANDLE ERROR HERE LATER, MEANS THAT SOMETHING IS WRONG WITH THE ATTRIBUTES OF ONE COLUMN
+					}
+					originalInstruction = "";
+				}
 			}
 		}
 	}
-	//HANDLES ((.,.,.,.),(.,.,.,.),..............,(.,.,.,.)) ^^^^^^^^
-	return 0;
+	else if(2==1)
+	{
+		//CREATING INDEX CASE
+	}
+	else 
+	{
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword TABLE not found\033[0m" << std::endl;
+		return 4; //WILL HANDLE ERROR HERE LATER
+		//NO KEYWORD FOUND CASE
+	}
 }
 
 
