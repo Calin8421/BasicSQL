@@ -311,9 +311,140 @@ public:
 	{
 		this->tableName = tableName;
 	}
+
+	Table() {};
+
+	std::string getTableName()
+	{
+		return this->tableName;
+	}
+
+	void setTableName(std::string tableName)
+	{
+		this->tableName = tableName;
+	}
+
+	void operator= (const Table& other) {
+		this->tableName = other.tableName;
+
+		// Copy all primitive types
+		this->totalCount = other.totalCount;
+		this->textCount = other.textCount;
+		this->integerCount = other.integerCount;
+		this->floatCount = other.floatCount;
+
+		// For pointers - set to nullptr for now (you'll handle properly later)
+		this->typesOrder = nullptr;
+		this->attributeNames = nullptr;
+		this->data = nullptr;
+
+		// TODO: Properly copy dynamic arrays in Phase 2
+	}
 };
-unsigned int tableCounter = 0;
-Table* tables = nullptr;
+
+class DataBase
+{
+	Table* tables = nullptr;
+	int tablesNo = 0;
+	Table* temp = nullptr;
+public:
+	int getTablesNo()
+	{
+		return this->tablesNo;
+	}
+
+	void setTablesNo(int tablesNo)
+	{
+		this->tablesNo = tablesNo;
+	}
+
+	void setTemp(Table* temp)
+	{
+		if (tablesNo > 0)
+		{
+			if (this->temp != nullptr)
+			{
+				delete[] this->temp;
+			}
+			this->temp = new Table[tablesNo];
+			for (int i = 0; i < tablesNo; i++)
+			{
+				this->temp[i] = temp[i];
+			}
+		}
+	}
+
+	Table* getTemp()
+	{
+		return this->temp;
+	}
+
+	void setTables(Table* tables)
+	{
+		if (tablesNo > 0)
+		{
+			if (this->tables != nullptr)
+			{
+				delete[] this->tables;
+			}
+			this->tables = new Table[tablesNo];
+			for (int i = 0; i < tablesNo; i++)
+			{
+				this->tables[i] = tables[i];
+			}
+		}
+	}
+
+	Table* getTables()
+	{
+		return this->tables;
+	}
+
+	void addTable(Table table)
+	{
+		if (tablesNo == 0)
+		{
+			tablesNo++;
+			tables = new Table[tablesNo];
+			tables[0] = table;
+		}
+		else if (tablesNo > 0)
+		{
+			// Create new temporary array with increased size
+			Table* newTables = new Table[tablesNo + 1];
+
+			// Copy existing tables
+			for (int i = 0; i < tablesNo; i++)
+			{
+				newTables[i] = tables[i];
+			}
+
+			// Add the new table
+			newTables[tablesNo] = table;
+
+			// Clean up old array and update
+			delete[] tables;
+			tables = newTables;
+			tablesNo++;
+		}
+	}
+
+	~DataBase()
+	{
+		if (tables != nullptr)
+		{
+			delete[] tables;
+			tables = nullptr;
+		}
+		if (temp != nullptr)
+		{
+			delete[] temp;
+			temp = nullptr;
+		}
+	}
+};
+
+DataBase db;
 
 ///FUNCTIONS FOR COMMAND INTERPRETER
 int INSERT(std::string instruction, int source = 0)
@@ -322,6 +453,8 @@ int INSERT(std::string instruction, int source = 0)
 	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
+
+
 
 int CREATE(std::string instruction)
 {
@@ -337,16 +470,16 @@ int CREATE(std::string instruction)
 		std::cout << std::endl << "\033[31mInvalid format, type: empty instruction\033[0m" << std::endl;
 		return 1; //WILL HANDLE ERROR HERE LATER
 	}
-	
+
 	if (originalInstruction.find(tableWord) != -1)
 	{
-		if (originalInstruction[tableWord.length()+1] != ' ')
+		if (originalInstruction[tableWord.length() + 1] != ' ')
 		{
 			std::cout << std::endl << "\033[31mInvalid format, type: no space between keyword TABLE and table name\033[0m" << std::endl;
 			return 2; //WILL HANDLE ERROR HERE LATER
 		}
 
-		originalInstruction = cut(originalInstruction, tableWord.length()+1);
+		originalInstruction = cut(originalInstruction, tableWord.length() + 1);
 		returnFirst(originalInstruction, "(", result);
 		returnFirst(originalInstruction, ")", temp);
 		if (result == "-" || temp == "-")
@@ -371,10 +504,16 @@ int CREATE(std::string instruction)
 				std::cout << std::endl << "\033[31mInvalid format, type: table name is missing\033[0m" << std::endl;
 				return 4; //WILL HANDLE ERROR HERE LATER
 			}
+			if (isValid(tableName) && tableName != "")
+			{
+				Table temp (tableName);
+				db.addTable(temp); 
+				std::cout << db.getTables()[db.getTablesNo() - 1].getTableName();
+			}
 		}
 		//HANDLES CREATE TABLE NAME() ^^^^^
 
-		std::cout << tableName << std::endl;///DISPLAYED THE NAME TO SHOW IT WORKS
+		//std::cout << tableName << std::endl;///DISPLAYED THE NAME TO SHOW IT WORKS
 		originalInstruction = cut(originalInstruction, 1);
 		originalInstruction = originalInstruction.substr(0, originalInstruction.length() - 1);
 
