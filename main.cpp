@@ -715,13 +715,13 @@ void scriptRunnerMenu()
 			///IN THE FUTURE MAKE IT SO THE FILE WON'T SAVE ANYTHING AND WILL ONLY ACT AS A SCRIPTRUNNER
 			std::cout << "Overwrite script runner contents? Y/n: ";
 			std::cin >> c;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			switch (c)
 			{
 			case 'y':
 			case 'Y':
 				if (overwriteFile(scriptEnvFile))
 				{
-					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 					scriptEnvironment();
 				}
 				else
@@ -758,6 +758,7 @@ void saveScriptProg()
 	{
 		std::cout << "Save contents of script runner? Y/n: ";
 		std::cin >> c;
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		switch (c)
 		{
 		case 'y':
