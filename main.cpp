@@ -20,12 +20,11 @@ std::string primeToken(std::string instruction)
 	char* cstr = new char[instruction.length() + 1];
 	std::strcpy(cstr, instruction.c_str());
 	p = strtok(cstr, " ");
-	if(p!=NULL) primeTok = p;
+	if (p != NULL) primeTok = p;
 	delete[] cstr;
 	return primeTok;
-	
-}
 
+}
 
 std::string restOfInstruction(std::string instruction) {
 	std::string instruct;
@@ -340,13 +339,17 @@ public:
 
 		// TODO: Properly copy dynamic arrays in Phase 2
 	}
+
+	bool operator== (Table other)
+	{
+		return this->getTableName() == other.getTableName();
+	}
 };
 
 class DataBase
 {
 	Table* tables = nullptr;
 	int tablesNo = 0;
-	Table* temp = nullptr;
 public:
 	int getTablesNo()
 	{
@@ -356,27 +359,6 @@ public:
 	void setTablesNo(int tablesNo)
 	{
 		this->tablesNo = tablesNo;
-	}
-
-	void setTemp(Table* temp)
-	{
-		if (tablesNo > 0)
-		{
-			if (this->temp != nullptr)
-			{
-				delete[] this->temp;
-			}
-			this->temp = new Table[tablesNo];
-			for (int i = 0; i < tablesNo; i++)
-			{
-				this->temp[i] = temp[i];
-			}
-		}
-	}
-
-	Table* getTemp()
-	{
-		return this->temp;
 	}
 
 	void setTables(Table* tables)
@@ -410,23 +392,31 @@ public:
 		}
 		else if (tablesNo > 0)
 		{
-			// Create new temporary array with increased size
 			Table* newTables = new Table[tablesNo + 1];
 
-			// Copy existing tables
 			for (int i = 0; i < tablesNo; i++)
 			{
 				newTables[i] = tables[i];
 			}
 
-			// Add the new table
 			newTables[tablesNo] = table;
 
-			// Clean up old array and update
 			delete[] tables;
 			tables = newTables;
 			tablesNo++;
 		}
+	}
+
+	bool checkIfTableExists(std::string tableName)
+	{
+		for (int i = 0; i < tablesNo; i++)
+		{
+			if (this->tables[i].getTableName() == tableName)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	~DataBase()
@@ -436,11 +426,7 @@ public:
 			delete[] tables;
 			tables = nullptr;
 		}
-		if (temp != nullptr)
-		{
-			delete[] temp;
-			temp = nullptr;
-		}
+
 	}
 };
 
@@ -458,12 +444,13 @@ int INSERT(std::string instruction, int source = 0)
 
 int CREATE(std::string instruction)
 {
-	std::string tableWord = "TABLE";
+	std::string tableWord = "TABLE", ifExists="IF NOT EXISTS";
 	std::string originalInstruction = instruction;
 	std::string result = "-", temp = "", name = "", type = "", size = "", default_value = "";
 	std::string tableName = "";
+	bool ifExistsOption = false;
 	char delimiter = ' ';
-	int insertReturnCode = 0, createCode = 1;
+	int insertReturnCode = 0, createCode = 1,temporary=0;
 	int willNeverBeUsedAgain = -1;
 	if (originalInstruction.empty())
 	{
@@ -480,7 +467,26 @@ int CREATE(std::string instruction)
 		}
 
 		originalInstruction = cut(originalInstruction, tableWord.length() + 1);
+
 		returnFirst(originalInstruction, "(", result);
+		temporary = result.length();
+		removeSpaces(result);
+
+		if (result.find(ifExists) != -1)
+		{
+			size_t position = result.find(ifExists);
+			if (position + ifExists.length() == result.length())
+			{
+				ifExistsOption = true;
+				result = result.substr(0,position);
+			}
+			else
+			{
+				std::cout << std::endl << "\033[31mInvalid format, type: there are characters (including space) between IF NOT EXISTS and (\033[0m" << std::endl;
+				return 9; //WILL HANDLE ERROR HERE LATER
+			}
+		}
+
 		returnFirst(originalInstruction, ")", temp);
 		if (result == "-" || temp == "-")
 		{
@@ -490,7 +496,11 @@ int CREATE(std::string instruction)
 		else
 		{
 			instruction = cut(instruction, result.length());
-			originalInstruction = cut(originalInstruction, result.length());
+			if (ifExistsOption)
+			{
+				originalInstruction = cut(originalInstruction, temporary);
+			}
+			//originalInstruction = cut(originalInstruction, result.length());
 			removeSpaces(result);
 			tableName = result;
 
@@ -504,11 +514,21 @@ int CREATE(std::string instruction)
 				std::cout << std::endl << "\033[31mInvalid format, type: table name is missing\033[0m" << std::endl;
 				return 4; //WILL HANDLE ERROR HERE LATER
 			}
-			if (isValid(tableName) && tableName != "")
+			if (ifExistsOption==true && db.checkIfTableExists(tableName))
+			{
+				std::cout << std::endl << "\033[31mInvalid table name, type: table name: "<<tableName <<" is already used\033[0m" << std::endl;
+				return 7; //WILL HANDLE ERROR HERE LATER
+			}
+			else if (ifExistsOption==false && db.checkIfTableExists(tableName))
+			{
+				return 8;
+				//WILL HANDLE ERROR HERE LATER
+			}
+			else if (isValid(tableName) && tableName != "" && !db.checkIfTableExists(tableName));
 			{
 				Table temp (tableName);
 				db.addTable(temp); 
-				std::cout << db.getTables()[db.getTablesNo() - 1].getTableName();
+				std::cout << db.getTables()[db.getTablesNo() - 1].getTableName()<<std::endl;
 			}
 		}
 		//HANDLES CREATE TABLE NAME() ^^^^^
@@ -654,7 +674,6 @@ void showCommands()
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
 	std::string command = inputCommand;
-	toUpper(command);
 
 
 	if (command == "CREATE")
