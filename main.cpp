@@ -496,10 +496,7 @@ int CREATE(std::string instruction)
 		else
 		{
 			instruction = cut(instruction, result.length());
-			if (ifExistsOption)
-			{
-				originalInstruction = cut(originalInstruction, temporary);
-			}
+			originalInstruction = cut(originalInstruction, temporary);
 			//originalInstruction = cut(originalInstruction, result.length());
 			removeSpaces(result);
 			tableName = result;
