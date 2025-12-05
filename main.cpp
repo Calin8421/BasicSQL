@@ -26,7 +26,6 @@ std::string primeToken(std::string instruction)
 	
 }
 
-
 std::string restOfInstruction(std::string instruction) {
 	std::string instruct;
 	char* p = NULL;
@@ -53,7 +52,6 @@ std::string toUpper(std::string& givenString)
 		[](unsigned char c) { return std::toupper(c); });
 	return givenString;
 }
-
 
 bool checkExistenceOFile(std::string fileName)
 {
@@ -89,8 +87,6 @@ bool overwriteFile(const std::string& fileName)
 	std::cout << "\033[31mContents deleted!\033[0m" << std::endl;
 	return true;        // file is empty at this point
 }
-
-
 
 //Stores std::string::find result(a size_t) into an int(int i = instruction.find(delimiter);).
 //When not found, find returns npos; converting to int is implementation - defined and can become - 1 or overflow.
@@ -570,7 +566,6 @@ std::string commander(std::string inputCommand, std::string instruction, bool& q
 	std::cout << "UNKNOWN" << std::endl;
 	return "UNKNOWN";
 }
-
 
 ///SQL CONSOLE
 int sqlQueryConsole()
