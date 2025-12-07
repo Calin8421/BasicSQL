@@ -210,6 +210,18 @@ void errorHandler(int errorCode, std::string tableName = "")
 	case 15:
 		std::cout << std::endl << "\033[31mInvalid format, type: the table "<<tableName<< " doesn't exist\033[0m" << std::endl;
 		break;
+	case 16:
+		std::cout << std::endl << "\033[31mInvalid format, type: one of the columns contains special characters"<<std::endl<<"In the future the whole SELECT command will be cancelled but for now this message will show up\033[0m" << std::endl;
+		break;
+	case 17:
+		std::cout << std::endl << "\033[31mInvalid format, type: no columns were provided for the SELECT\033[0m" << std::endl;
+		break;
+	case 18:
+		std::cout << std::endl << "\033[31mInvalid format, type: illegal characters found between the ')' and FROM , make sure that there are only empty spaces between the closing parenthesis and the keyword FROM including the ALL keyword since you the command will handle either some columns or ALL not both at the same time\033[0m" << std::endl;
+		break;
+	case 19:
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword FROM not found" << std::endl << "In the future the whole SELECT command will be cancelled but for now this message will show up\033[0m"<<std::endl;
+		break;
 	default:
 		std::cout << std::endl << "\033[33mIf this message shows up it means that the error handler received an error code that doesn't exist yet, this code being " << errorCode << "\033[0m" << std::endl;
 
@@ -792,8 +804,135 @@ int DISPLAY(std::string instruction)
 }
 int SELECT(std::string instruction)
 {
-	std::cout << "Data selected" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	removeSpaces(instruction);
+	bool isAll = false,isWhere =false;
+	int columnCount = 0;
+	std::string temp = "",column="";
+	const int whereSize = 5;
+
+	if (instruction == "")
+	{
+		errorHandler(1);
+		return 1;
+	}
+
+	returnFirst(instruction, "ALL", temp);
+	if (temp != "-")
+	{
+		isAll = true;
+	}
+	if (instruction.find('(') == 0 && instruction.find(")") != -1 && isAll==false)
+	{
+		instruction = cut(instruction, 1);
+		returnFirst(instruction, ")", temp);
+		instruction = cut(instruction, temp.size()+1);
+		removeSpaces(temp);
+		while (!temp.empty() && temp.find(',') != -1)
+		{
+			if (temp[0] == ',')
+			{
+				temp = cut(temp, 1);
+			}
+			removeSpaces(temp);
+			returnFirst(temp, ",", column);
+			temp = cut(temp, column.size());
+			if (temp[0] = ',')
+			{
+				temp = cut(temp, 1);
+			}
+			removeSpaces(column);
+			if (isValid(column))
+			{
+				std::cout << "\033[32m" << column << " \033[0m" << std::endl;
+				columnCount++;
+			}
+			else
+			{
+				errorHandler(16);
+				return 16;
+			}
+
+			removeSpaces(temp);
+		}
+		if (!temp.empty())
+		{
+			removeSpaces(temp);
+			if (isValid(temp))
+			{
+				std::cout << "\033[32m" << temp << " \033[0m" << std::endl;
+				columnCount++;
+			}
+			else
+			{
+				errorHandler(16);
+				return 16;
+			}
+		}
+	}
+	else if(isAll==false)
+	{
+		errorHandler(5);
+		return 5;
+	}
+
+	if (isAll == false && columnCount==0)
+	{
+		errorHandler(17);
+		return 17;
+	}
+
+	if (isAll == true)
+	{
+		std::cout << "\033[32mIf this shows up it means that the ALL option is selected and all columns will be selected from the specified table \033[0m" << std::endl;
+	}
+
+	returnFirst(instruction, "FROM", temp);
+	instruction = cut(instruction, temp.size());
+	removeSpaces(temp);
+
+	if (temp == "-")
+	{
+		errorHandler(19);
+		return 19;
+	}
+	else if (!isValid(temp))
+	{
+		errorHandler(18);
+		return 18;
+	}
+	removeSpaces(instruction);
+	instruction = cut(instruction, 4);
+	removeSpaces(instruction);
+	if (instruction.find("WHERE")!=-1)
+	{
+		isWhere = true;
+	}
+	if (isWhere ==true)
+	{
+		returnFirst(instruction, "WHERE", temp);
+	}
+	else
+	{
+		temp = instruction;
+	}
+	instruction = cut(instruction, temp.size());
+	removeSpaces(temp);
+	if (isValid(temp) && temp!="-")
+	{
+		std::cout << "From the table:\033[32m" << temp << "\033[0m" << std::endl;
+	}
+	else
+	{
+		errorHandler(4);
+		return 4;
+	}
+	if (isWhere == true)
+	{
+		instruction = cut(instruction, whereSize);
+		removeSpaces(instruction);
+		std::cout << "The condition is:\033[32m " << instruction << "\033[0m" << std::endl;
+	}
+
 	return 0;
 }
 
