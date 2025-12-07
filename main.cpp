@@ -201,6 +201,15 @@ void errorHandler(int errorCode, std::string tableName = "")
 	case 12:
 		std::cout << std::endl << "\033[31mInvalid format, type: one or more columns doesn't have the right number of attributes or there are empty spaces between the round brackets\033[0m" << std::endl;
 		break;
+	case 13:
+		std::cout << std::endl << "\033[31mInvalid format, type: more than one table name found or one of the table names contains illegal characters\033[0m" << std::endl;
+		break;
+	case 14:
+		std::cout << std::endl << "\033[31mInvalid format, type: no table name found\033[0m" << std::endl;
+		break;
+	case 15:
+		std::cout << std::endl << "\033[31mInvalid format, type: the table "<<tableName<< " doesn't exist\033[0m" << std::endl;
+		break;
 	default:
 		std::cout << std::endl << "\033[33mIf this message shows up it means that the error handler received an error code that doesn't exist yet, this code being " << errorCode << "\033[0m" << std::endl;
 
@@ -662,8 +671,61 @@ int UPDATE(std::string instruction)
 }
 int DROP(std::string instruction)
 {
-	std::cout << "Table was dropped" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	std::string tableWord = "TABLE";
+	std::string temp = "",copy="";
+	int tableWordSize = 5;
+	bool found = false;
+
+	removeSpaces(instruction);
+	if (instruction == "")
+	{
+		errorHandler(1);
+		return 1;
+	}
+	if (instruction.find(tableWord) == -1)
+	{
+		errorHandler(4);
+		return 4;
+	}
+	copy = instruction;
+	temp = cut(copy, tableWordSize);
+	removeSpaces(temp);
+	if (temp=="")
+	{
+		errorHandler(14);
+		return 14;
+	}
+	if (instruction[tableWordSize] != ' ')
+	{
+		errorHandler(2);
+		return 2;
+	}
+	instruction=cut(instruction, tableWordSize);
+	removeSpaces(instruction);
+	if (isValid(instruction) != true)
+	{
+		errorHandler(13,instruction);
+		return 13;
+	}
+	else
+	{
+		for (int i = 0; i < db.getTablesNo(); i++)
+		{
+			if (db.getTables()[i].getTableName() == instruction)
+			{
+				found = true;
+			}
+		}
+		if (found == true)
+		{
+			std::cout << "\033[32mTable: " << instruction << " will be deleted\033[0m"<<std::endl;
+		}
+		else
+		{
+			errorHandler(15,instruction);
+			return 15;
+		}
+	}
 	return 0;
 }
 int DELETE(std::string instruction)
