@@ -795,11 +795,10 @@ void showCommands()
 }
 
 
-std::string commander(std::string inputCommand, std::string instruction, bool& quit)
+std::string commander(std::string &inputCommand, std::string &instruction, bool& quit)
 {
 	std::string command = inputCommand;
-
-
+	toUpper(command);
 	if (command == "CREATE")
 	{
 		CREATE(instruction);
