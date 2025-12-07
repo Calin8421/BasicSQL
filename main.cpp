@@ -736,8 +736,58 @@ int DELETE(std::string instruction)
 }
 int DISPLAY(std::string instruction)
 {
-	std::cout << "Data dsiplayed" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	std::string tableWord = "TABLE";
+	std::string temp = "", copy = "";
+	int tableWordSize = 5;
+	bool found = false;
+
+	removeSpaces(instruction);
+	if (instruction == "")
+	{
+		errorHandler(1);
+		return 1;
+	}
+	if (instruction.find(tableWord) == -1)
+	{
+		errorHandler(4);
+		return 4;
+	}
+	copy = instruction;
+	temp = cut(copy, tableWordSize);
+	removeSpaces(temp);
+	if (temp == "")
+	{
+		errorHandler(14);
+		return 14;
+	}
+	if (instruction[tableWordSize] != ' ')
+	{
+		errorHandler(2);
+		return 2;
+	}
+	instruction = cut(instruction, tableWordSize);
+	removeSpaces(instruction);
+	if (isValid(instruction) != true)
+	{
+		errorHandler(13, instruction);
+		return 13;
+	}
+	else
+	{
+		for (int i = 0; i < db.getTablesNo(); i++)
+		{
+			if (db.getTables()[i].getTableName() == instruction)
+			{
+				found = true;
+				std::cout << "Table: \033[32m" << instruction <<"\033[0m" << std::endl;
+			}
+		}
+		if (found == false)
+		{
+			errorHandler(15, instruction);
+			return 15;
+		}
+	}
 	return 0;
 }
 int SELECT(std::string instruction)

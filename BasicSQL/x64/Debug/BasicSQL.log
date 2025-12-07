@@ -10,6 +10,6 @@ C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(536,28): warning C4267: '=': conve
 C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(564,48): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(619,68): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(594,88): warning C4390: ';': empty controlled statement found; is this the intent?
-C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(915,1): warning C4715: 'scriptRunner': not all control paths return a value
+C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(964,1): warning C4715: 'scriptRunner': not all control paths return a value
 C:\Users\Mihai\Source\Repos\BasicSQL\main.cpp(662,1): warning C4715: 'CREATE': not all control paths return a value
   BasicSQL.vcxproj -> C:\Users\Mihai\source\repos\BasicSQL\x64\Debug\BasicSQL.exe
