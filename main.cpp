@@ -184,7 +184,7 @@ void errorHandler(int errorCode, std::string tableName = "")
 		std::cout << std::endl << "\033[31mInvalid format, type: there's an issue with the round brackets\033[0m" << std::endl;
 		break;
 	case 6:
-		std::cout << "\033[31mInvalid format, type: in the future the whole CREATE command will be cancelled, until then this message will show up\033[0m" << std::endl;
+		std::cout << std::endl << "\033[31mInvalid format, type: in the future the whole CREATE command will be cancelled, until then this message will show up\033[0m" << std::endl;
 		break;
 	case 7:
 		std::cout << std::endl << "\033[31mInvalid table name, type: table name " << tableName << " is already used\033[0m" << std::endl;
@@ -220,11 +220,12 @@ void errorHandler(int errorCode, std::string tableName = "")
 		std::cout << std::endl << "\033[31mInvalid format, type: illegal characters found between the ')' and FROM , make sure that there are only empty spaces between the closing parenthesis and the keyword FROM including the ALL keyword since you the command will handle either some columns or ALL not both at the same time\033[0m" << std::endl;
 		break;
 	case 19:
-		std::cout << std::endl << "\033[31mInvalid format, type: keyword FROM not found" << std::endl << "In the future the whole SELECT command will be cancelled but for now this message will show up\033[0m"<<std::endl;
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword FROM not found" << std::endl << "In the future the whole command will be cancelled but for now this message will show up\033[0m"<<std::endl;
 		break;
+	case 20:
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword WHERE not found\033[0m" << std::endl;
 	default:
 		std::cout << std::endl << "\033[33mIf this message shows up it means that the error handler received an error code that doesn't exist yet, this code being " << errorCode << "\033[0m" << std::endl;
-
 	}
 }
 
@@ -507,15 +508,12 @@ public:
 DataBase db;
 
 ///FUNCTIONS FOR COMMAND INTERPRETER
-int INSERT(std::string instruction, int source = 0)
+int INSERT(std::string instruction)
 {
 	std::cout << "Insert function" << std::endl;
 	std::cout << "Instructions are: " << instruction << std::endl;
 	return 0;
 }
-
-
-
 int CREATE(std::string instruction)
 {
 	std::string tableWord = "TABLE", ifExists="IF NOT EXISTS";
@@ -599,7 +597,7 @@ int CREATE(std::string instruction)
 			}
 			else if (ifExistsOption==false && db.checkIfTableExists(tableName))
 			{
-				errorHandler(8);
+				//errorHandler(8);
 				return 8;
 				//WILL HANDLE ERROR HERE LATER
 			}
@@ -672,9 +670,6 @@ int CREATE(std::string instruction)
 		//NO KEYWORD FOUND CASE
 	}
 }
-
-
-
 int UPDATE(std::string instruction)
 {
 	std::cout << "Table was updated!" << std::endl;
@@ -742,8 +737,26 @@ int DROP(std::string instruction)
 }
 int DELETE(std::string instruction)
 {
-	std::cout << "Data deleted" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	bool isWhere = false;
+	removeSpaces(instruction);
+	if (instruction.substr(0, 4) != "FROM")
+	{
+		errorHandler(19);
+		return 19;
+	}
+	else
+	{
+		std::cout << instruction;
+		if (instruction.find("WHERE"))
+		{
+			isWhere = true;
+		}
+		else
+		{
+			errorHandler(20);
+			return 20;
+		}
+	}
 	return 0;
 }
 int DISPLAY(std::string instruction)
@@ -805,7 +818,7 @@ int DISPLAY(std::string instruction)
 int SELECT(std::string instruction)
 {
 	removeSpaces(instruction);
-	bool isAll = false,isWhere =false;
+	bool isAll = false,isWhere =false,found=false;
 	int columnCount = 0;
 	std::string temp = "",column="";
 	const int whereSize = 5;
@@ -919,7 +932,22 @@ int SELECT(std::string instruction)
 	removeSpaces(temp);
 	if (isValid(temp) && temp!="-")
 	{
-		std::cout << "From the table:\033[32m" << temp << "\033[0m" << std::endl;
+		for (int i = 0; i < db.getTablesNo(); i++)
+		{
+			if (db.getTables()[i].getTableName() == temp)
+			{
+				found = true;
+			}
+		}
+		if (found == true)
+		{
+			std::cout << "From the table:\033[32m" << temp << "\033[0m" << std::endl;
+		}
+		else
+		{
+			errorHandler(15, temp);
+			return 15;
+		}
 	}
 	else
 	{
