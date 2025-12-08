@@ -224,6 +224,7 @@ void errorHandler(int errorCode, std::string tableName = "")
 		break;
 	case 20:
 		std::cout << std::endl << "\033[31mInvalid format, type: keyword WHERE not found\033[0m" << std::endl;
+		break;
 	default:
 		std::cout << std::endl << "\033[33mIf this message shows up it means that the error handler received an error code that doesn't exist yet, this code being " << errorCode << "\033[0m" << std::endl;
 	}
@@ -737,8 +738,16 @@ int DROP(std::string instruction)
 }
 int DELETE(std::string instruction)
 {
-	bool isWhere = false;
+	std::string temp = "";
+	bool isWhere = false,found=false;
+	const int fromSize = 4,whereSize=5;
+
 	removeSpaces(instruction);
+	if (instruction == "")
+	{
+		errorHandler(1);
+		return 1;
+	}
 	if (instruction.substr(0, 4) != "FROM")
 	{
 		errorHandler(19);
@@ -746,8 +755,8 @@ int DELETE(std::string instruction)
 	}
 	else
 	{
-		std::cout << instruction;
-		if (instruction.find("WHERE"))
+		instruction = cut(instruction, 4);
+		if (instruction.find("WHERE ")!=-1)
 		{
 			isWhere = true;
 		}
@@ -756,6 +765,36 @@ int DELETE(std::string instruction)
 			errorHandler(20);
 			return 20;
 		}
+
+		returnFirst(instruction, "WHERE", temp);
+		instruction = cut(instruction, temp.size());
+		removeSpaces(temp);
+		if (temp == "")
+		{
+			errorHandler(14);
+			return 14;
+		}
+		if (!isValid(temp))
+		{
+			errorHandler(4);
+			return 4;
+		}
+		for (int i = 0; i < db.getTablesNo(); i++)
+		{
+			if (db.getTables()[i].getTableName() == temp)
+			{
+				found = true;
+				std::cout << "Table: \033[32m" << temp << "\033[0m" << std::endl;
+			}
+		}
+		if (found == false)
+		{
+			errorHandler(15, temp);
+			return 15;
+		}
+		instruction = cut(instruction, whereSize);
+		removeSpaces(instruction);
+		std::cout << "The condition is: \033[32m" << instruction <<std::endl<< "Just to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" << std::endl;
 	}
 	return 0;
 }
@@ -810,7 +849,7 @@ int DISPLAY(std::string instruction)
 		if (found == false)
 		{
 			errorHandler(15, instruction);
-			return 15;
+			return 15; 
 		}
 	}
 	return 0;
@@ -958,7 +997,7 @@ int SELECT(std::string instruction)
 	{
 		instruction = cut(instruction, whereSize);
 		removeSpaces(instruction);
-		std::cout << "The condition is:\033[32m " << instruction << "\033[0m" << std::endl;
+		std::cout << "The condition is:\033[32m " << instruction <<std::endl << "Just to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" "\033[0m" << std::endl;
 	}
 
 	return 0;
