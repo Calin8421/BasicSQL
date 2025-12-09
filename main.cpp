@@ -124,7 +124,19 @@ int count(std::string instruction, char character)
 
 bool isValid(std::string instruction)
 {
-	std::string illegalCharacters = " ,;(){}[]<>!@#$%^&*+-=|\/?:.\"";
+	std::string illegalCharacters = " ,;(){}[]<>!@#$%^&*+-=|\/?:\".";
+	int lenghtIllegal = illegalCharacters.length(), lenghtInstruction = instruction.length(), i, j;
+	for (i = 0; i < lenghtIllegal; i++)
+		for (j = 0; j < lenghtInstruction; j++)
+		{
+			if (illegalCharacters[i] == instruction[j]) return false;
+		}
+	return true;
+}
+
+bool isValidForInsert(std::string instruction)
+{
+	std::string illegalCharacters = " ;(){}[]<>!@#$%^&*+-=|\/?:";
 	int lenghtIllegal = illegalCharacters.length(), lenghtInstruction = instruction.length(), i, j;
 	for (i = 0; i < lenghtIllegal; i++)
 		for (j = 0; j < lenghtInstruction; j++)
@@ -220,13 +232,13 @@ void errorHandler(int errorCode, std::string tableName = "")
 		std::cout << std::endl << "\033[31mInvalid format, type: illegal characters found between the ')' and FROM , make sure that there are only empty spaces between the closing parenthesis and the keyword FROM including the ALL keyword since you the command will handle either some columns or ALL not both at the same time\033[0m" << std::endl;
 		break;
 	case 19:
-		std::cout << std::endl << "\033[31mInvalid format, type: keyword FROM not found" << std::endl << "In the future the whole command will be cancelled but for now this message will show up\033[0m"<<std::endl;
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword FROM not found, make sure to type the word correctly and leave as space after it" << std::endl << "In the future the whole command will be cancelled but for now this message will show up\033[0m"<<std::endl;
 		break;
 	case 20:
-		std::cout << std::endl << "\033[31mInvalid format, type: keyword WHERE not found\033[0m" << std::endl;
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword WHERE not found, make sure to type the word correctly and leave as space after it\033[0m" << std::endl;
 		break;
 	case 21:
-		std::cout << std::endl << "\033[31mInvalid format, type: keyword SET not found\033[0m" << std::endl;
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword SET not found, make sure to type the word correctly and leave as space after it\033[0m" << std::endl;
 		break;
 	case 22:
 		std::cout << std::endl << "\033[31mInvalid format, type: keyword WHERE found before keyword SET\033[0m" << std::endl;
@@ -236,6 +248,18 @@ void errorHandler(int errorCode, std::string tableName = "")
 		break;
 	case 24:
 		std::cout << std::endl << "\033[31mInvalid format, type: WHERE condition is missing\033[0m" << std::endl;
+		break;
+	case 25:
+		std::cout << std::endl << "\033[31mInvalid format, type: INTO keyword is missing, make sure to type the word correctly and leave as space after it\033[0m" << std::endl;
+		break;
+	case 26:
+		std::cout << std::endl << "\033[31mInvalid format, type: VALUES keyword is missing, make sure to type the word correctly and leave as space after it\033[0m" << std::endl;
+		break;
+	case 27:
+		std::cout << std::endl << "\033[31mInvalid format, type: no values were given\033[0m" << std::endl;
+		break;
+	case 28:
+		std::cout << std::endl << "\033[31mInvalid format, type: one of the values is empty or two attributes were typed instead of one, the whole function will be cancelled, make sure no values are empty\033[0m" << std::endl;
 		break;
 	default:
 		std::cout << std::endl << "\033[33mIf this message shows up it means that the error handler received an error code that doesn't exist yet, this code being " << errorCode << "\033[0m" << std::endl;
@@ -523,8 +547,102 @@ DataBase db;
 ///FUNCTIONS FOR COMMAND INTERPRETER
 int INSERT(std::string instruction)
 {
-	std::cout << "Insert function" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	const int intoSize = 4, valuesSize = 6;
+	std::string temp = "";
+	bool found = false;
+
+	removeSpaces(instruction);
+	if (instruction == "")
+	{
+		errorHandler(1);
+		return 1;
+	}
+	if (instruction.substr(0, 5) != "INTO ")
+	{
+		errorHandler(25);
+		return 25;
+	}
+	if (instruction.find(" VALUES ") == -1)
+	{
+		errorHandler(26);
+		return 26;
+	}
+
+	instruction = cut(instruction, intoSize);
+	returnFirst(instruction, "VALUES", temp);
+	instruction = cut(instruction, temp.size());
+	removeSpaces(temp);
+
+	if (!isValid(temp) || temp == "")
+	{
+		errorHandler(4);
+		return 4;
+	}
+
+	for (int i = 0; i < db.getTablesNo(); i++)
+	{
+		if (db.getTables()[i].getTableName() == temp)
+		{
+			found = true;
+			std::cout << "Table: \033[32m" << temp << "\033[0m" << std::endl;
+		}
+	}
+	if (found == false)
+	{
+		errorHandler(15, temp);
+		return 15;
+	}
+
+	instruction = cut(instruction, valuesSize);
+
+	removeSpaces(instruction);
+	if (instruction[0] != '(' || instruction[instruction.size() - 1] != ')')
+	{
+		errorHandler(5);
+		return 5;
+	}
+	instruction = instruction.substr(1, instruction.size() - 1);
+	
+	found = false;
+
+	std::cout << "Values: \033[32m"<<std::endl;
+
+	returnFirst(instruction, ",", temp);
+	while (temp!="-")
+	{
+		if (temp == "" || !isValidForInsert(temp))
+		{
+			errorHandler(28);
+			return 28;
+		}
+		if (temp != "-")
+		{
+			found = true;
+			instruction = cut(instruction, temp.size() + 1);
+			removeSpaces(temp);
+			std::cout << temp << " ";
+			returnFirst(instruction, ",", temp);
+		}
+	}
+	removeSpaces(instruction);
+	if (instruction == ")" || !isValidForInsert(instruction.substr(0,instruction.length()-2)))
+	{
+		errorHandler(28);
+		return 28;
+	}
+	else
+	{
+		instruction=instruction.substr(0, instruction.size() - 1);
+		removeSpaces(instruction);
+		std::cout << instruction;
+		found = true;
+	}
+	std::cout << "\033[0m"<<std::endl;
+	if (found == false)
+	{
+		errorHandler(27);
+		return 27;
+	}
 	return 0;
 }
 int CREATE(std::string instruction)
@@ -695,17 +813,17 @@ int UPDATE(std::string instruction)
 		errorHandler(1);
 		return 1;
 	}
-	if (instruction.find("SET")==-1)
+	if (instruction.find(" SET ")==-1)
 	{
 		errorHandler(21);
 		return 21;
 	}
-	if (instruction.find("WHERE")==-1)
+	if (instruction.find(" WHERE ")==-1)
 	{
 		errorHandler(20);
 		return 20;
 	}
-	if (instruction.find("SET") > instruction.find("WHERE"))
+	if (instruction.find(" SET ") > instruction.find(" WHERE "))
 	{
 		errorHandler(22);
 		return 22;
