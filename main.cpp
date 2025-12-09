@@ -225,6 +225,18 @@ void errorHandler(int errorCode, std::string tableName = "")
 	case 20:
 		std::cout << std::endl << "\033[31mInvalid format, type: keyword WHERE not found\033[0m" << std::endl;
 		break;
+	case 21:
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword SET not found\033[0m" << std::endl;
+		break;
+	case 22:
+		std::cout << std::endl << "\033[31mInvalid format, type: keyword WHERE found before keyword SET\033[0m" << std::endl;
+		break;
+	case 23:
+		std::cout << std::endl << "\033[31mInvalid format, type: column to be changed is missing\033[0m" << std::endl;
+		break;
+	case 24:
+		std::cout << std::endl << "\033[31mInvalid format, type: WHERE condition is missing\033[0m" << std::endl;
+		break;
 	default:
 		std::cout << std::endl << "\033[33mIf this message shows up it means that the error handler received an error code that doesn't exist yet, this code being " << errorCode << "\033[0m" << std::endl;
 	}
@@ -673,8 +685,79 @@ int CREATE(std::string instruction)
 }
 int UPDATE(std::string instruction)
 {
-	std::cout << "Table was updated!" << std::endl;
-	std::cout << "Instructions are: " << instruction << std::endl;
+	std::string temp = "";	
+	const int setSize = 3, whereSize = 5;
+	bool found=false;
+
+	removeSpaces(instruction);
+	if (instruction == "")
+	{
+		errorHandler(1);
+		return 1;
+	}
+	if (instruction.find("SET")==-1)
+	{
+		errorHandler(21);
+		return 21;
+	}
+	if (instruction.find("WHERE")==-1)
+	{
+		errorHandler(20);
+		return 20;
+	}
+	if (instruction.find("SET") > instruction.find("WHERE"))
+	{
+		errorHandler(22);
+		return 22;
+	}
+	returnFirst(instruction, "SET", temp);
+	instruction = cut(instruction, temp.size());
+	removeSpaces(temp);
+	if (!isValid(temp) || temp=="")
+	{
+		errorHandler(4);
+		return 4;
+	}
+	else
+	{
+		for (int i = 0; i < db.getTablesNo(); i++)
+		{
+			if (db.getTables()[i].getTableName() == temp)
+			{
+				found = true;
+				std::cout << "Table: \033[32m" << temp << "\033[0m" << std::endl;
+			}
+		}
+		if (found == false)
+		{
+			errorHandler(15, temp);
+			return 15;
+		}
+	}
+	instruction = cut(instruction, setSize);
+	returnFirst(instruction, "WHERE", temp);
+	instruction = cut(instruction, temp.size());
+	removeSpaces(temp);
+	if (temp == "")
+	{
+		errorHandler(23);
+		return 23;
+	}
+	else
+	{
+		std::cout << "Column: \033[32m" << temp << "\033[0m" << std::endl;
+	}
+	instruction = cut(instruction, whereSize);
+	removeSpaces(instruction);
+	if (instruction == "")
+	{
+		errorHandler(24);
+		return 24;
+	}
+	else
+	{
+		std::cout << "The condition is:\033[32m " << instruction << std::endl << "\033[33mJust to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" "\033[0m" << std::endl;
+	}
 	return 0;
 }
 int DROP(std::string instruction)
@@ -794,7 +877,7 @@ int DELETE(std::string instruction)
 		}
 		instruction = cut(instruction, whereSize);
 		removeSpaces(instruction);
-		std::cout << "The condition is: \033[32m" << instruction <<std::endl<< "Just to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" << std::endl;
+		std::cout << "The condition is: \033[32m" << instruction <<std::endl<< "\033[33mJust to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" << std::endl;
 	}
 	return 0;
 }
@@ -997,7 +1080,7 @@ int SELECT(std::string instruction)
 	{
 		instruction = cut(instruction, whereSize);
 		removeSpaces(instruction);
-		std::cout << "The condition is:\033[32m " << instruction <<std::endl << "Just to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" "\033[0m" << std::endl;
+		std::cout << "The condition is:\033[32m " << instruction <<std::endl << "\033[33mJust to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" "\033[0m" << std::endl;
 	}
 
 	return 0;
