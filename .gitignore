@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Visual Studio / MSVC
 *.obj
 *.pdb
@@ -21,3 +22,20 @@ Release/
 .vs/
 *.VC.db
 *.VC.opendb
+=======
+x64/
+Debug/
+Release/
+*.exe
+*.pdb
+*.obj
+*.ilk
+*.idb
+*.log
+*.tlog
+*.recipe
+.vs/
+out/
+bin/
+obj/
+>>>>>>> feature/functions
