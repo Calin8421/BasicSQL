@@ -1,0 +1,9 @@
+#pragma once
+#include <iostream>
+int INSERT(std::string);
+int CREATE(std::string);
+int UPDATE(std::string);
+int DROP(std::string);
+int DELETE(std::string);
+int DISPLAY(std::string);
+int SELECT(std::string);

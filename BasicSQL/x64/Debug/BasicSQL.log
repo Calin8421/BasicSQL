@@ -1,27 +1,3 @@
 ﻿  main.cpp
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(97,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(135,34): warning C4129: '/': unrecognized character escape sequence
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(136,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(136,68): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(147,34): warning C4129: '/': unrecognized character escape sequence
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(148,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(148,68): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(175,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(313,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(581,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(629,47): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(682,69): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(685,28): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(713,48): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(768,68): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(743,88): warning C4390: ';': empty controlled statement found; is this the intent?
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(840,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(865,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(979,43): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(1089,45): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(1099,32): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(1151,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(1179,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(811,1): warning C4715: 'CREATE': not all control paths return a value
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(1379,1): warning C4715: 'scriptRunner': not all control paths return a value
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(378,1): warning C4715: 'scriptRunner': not all control paths return a value
   BasicSQL.vcxproj -> F:\ASE\YEAR2\POO\Projects\BasicSQL\x64\Debug\BasicSQL.exe
