@@ -7,11 +7,6 @@
 
 
 // UTILITY FUNCTIONS
-
-
-
-// UTILITY FUNCTIONS
-
 std::string primeToken(std::string instruction)
 {
 	std::string primeTok;

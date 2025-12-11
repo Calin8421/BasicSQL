@@ -52,7 +52,7 @@ void showCommands()
 	std::cout << "<========================================================================================>" << std::endl;
 }
 
-
+///FIX THIS (XYY FORMAT - (X -> 1=CREATEM, 2=INSERT... ; YY -> PROBLEM INDEX))
 void errorHandler(int errorCode, std::string tableName = "")
 {
 	switch (errorCode)
