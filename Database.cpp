@@ -1,4 +1,6 @@
 #include "Database.h"
+#include "Utils.h"
+#include "Commands.h"
 #include <iostream>
 
 // ============ rowData method definitions ============

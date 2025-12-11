@@ -14,8 +14,18 @@ F:\ASE\YEAR2\POO\Projects\BasicSQL\Commands.cpp(765,46): warning C4267: 'argumen
 F:\ASE\YEAR2\POO\Projects\BasicSQL\Commands.cpp(775,32): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 F:\ASE\YEAR2\POO\Projects\BasicSQL\Commands.cpp(827,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 F:\ASE\YEAR2\POO\Projects\BasicSQL\Commands.cpp(855,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Database.cpp
+  Utils.cpp
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(95,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(134,34): warning C4129: '/': unrecognized character escape sequence
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(135,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(135,68): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(146,34): warning C4129: '/': unrecognized character escape sequence
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(147,20): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(147,68): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+F:\ASE\YEAR2\POO\Projects\BasicSQL\Utils.cpp(173,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   main.cpp
   Generating Code...
-F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(277,1): warning C4715: 'scriptRunner': not all control paths return a value
+F:\ASE\YEAR2\POO\Projects\BasicSQL\main.cpp(273,1): warning C4715: 'scriptRunner': not all control paths return a value
 F:\ASE\YEAR2\POO\Projects\BasicSQL\Commands.cpp(487,1): warning C4715: 'CREATE': not all control paths return a value
   BasicSQL.vcxproj -> F:\ASE\YEAR2\POO\Projects\BasicSQL\x64\Debug\BasicSQL.exe
