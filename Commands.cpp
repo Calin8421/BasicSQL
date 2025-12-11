@@ -888,6 +888,7 @@ int SELECT(std::string instruction)
 	return 0;
 }
 
+///make this in to a int to return the error codes from the sql functions
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
 {
 	std::string command = inputCommand;

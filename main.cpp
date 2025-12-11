@@ -14,11 +14,12 @@
 #include "Database.h"
 
 
+///SCRIPT RUNNER FILE
 std::string scriptEnvFile = "scriptEnv.txt";
 
 
-///DYNAMIC TABLE ALLOC
-///DECONSTRUCT THIS
+//DYNAMIC TABLE ALLOC
+//DECONSTRUCT THIS
 //class rowData
 //{
 //private:
@@ -211,9 +212,6 @@ std::string scriptEnvFile = "scriptEnv.txt";
 //DataBase db;
 
 
-///make this in to a int to return the error codes from the sql functions
-
-
 ///SQL CONSOLE
 int sqlQueryConsole()
 {
@@ -224,7 +222,7 @@ int sqlQueryConsole()
 	std::getline(std::cin, userInput);
 	///:(
 	toUpper(userInput);
-	
+	///toUpper
 	firstToken = primeToken(userInput);
 	userInstruction = restOfInstruction(userInput);
 	std::cout << std::endl;
@@ -263,9 +261,7 @@ int scriptRunner()
 					scriptEnv.close();
 					return 0;
 				}
-		
 			}
-
 		}
 		std::cout << "Reached end of script!" << std::endl;
 	}
@@ -343,9 +339,7 @@ void scriptEnvironment()
 				}
 			}
 		}
-		
 	}
-
 }
 
 void scriptRunnerMenu()
@@ -390,9 +384,6 @@ void scriptRunnerMenu()
 	}
 	else
 		scriptEnvironment();
-	
-
-
 }
 
 void saveScriptProg()
@@ -423,7 +414,6 @@ void saveScriptProg()
 			break;
 		}
 	}
-
 }
 
 ///MENU FUNCTIONS
