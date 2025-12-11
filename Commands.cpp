@@ -8,6 +8,51 @@
 ///DYNAMIC TABLE ALLOC
 ///DECONSTRUCT THIS
 
+void showCommands()
+{
+	std::cout << std::endl;
+	std::cout << "<=================================== SQL COMMAND HELP ===================================>" << std::endl;
+	std::cout << "COMMAND   | DESCRIPTION" << std::endl;
+	std::cout << "---------------------------------------------------------------------------------" << std::endl;
+	std::cout << "INSERT    | Adds new rows of data into a table." << std::endl;
+	std::cout << "          | Example: INSERT INTO employees " << std::endl;
+	std::cout << "          |           VALUES (id INT,name TEXT,salary FLOAT,DEFAULT_VALUE);" << std::endl << std::endl;
+
+	std::cout << "SELECT    | Retrieves data from one or more tables." << std::endl;
+	std::cout << "          | Example: SELECT name, salary FROM employees" << std::endl;
+	std::cout << "          |           WHERE salary > 3000;" << std::endl << std::endl;
+
+	std::cout << "UPDATE    | Modifies existing rows in a table." << std::endl;
+	std::cout << "          | Example: UPDATE employees SET salary = 6000" << std::endl;
+	std::cout << "          |           WHERE name = 'John';" << std::endl << std::endl;
+
+	std::cout << "DELETE    | Removes rows from a table." << std::endl;
+	std::cout << "          | Example: DELETE FROM employees WHERE name = 'John';" << std::endl << std::endl;
+
+	std::cout << "CREATE    | Creates a new database object (e.g., table)." << std::endl;
+	std::cout << "          | Example: CREATE TABLE employees ((id INT,name TEXT,salary FLOAT,DEFAULT_VAL));" << std::endl << std::endl;
+
+	std::cout << "DROP      | Deletes a database object permanently." << std::endl;
+	std::cout << "          | Example: DROP TABLE employees;" << std::endl << std::endl;
+
+	std::cout << "DISPLAY   | Shows the content of the current database or table (custom command)." << std::endl;
+	std::cout << "          | Example: DISPLAY employees;" << std::endl << std::endl;
+
+	std::cout << "CLEAR     | Clears the screen or console output (custom shell command)." << std::endl;
+	std::cout << "          | Example: CLEAR;" << std::endl << std::endl;
+
+	std::cout << "HELP/INFO | Shows help information about available commands." << std::endl;
+	std::cout << "          | Example: HELP;" << std::endl << std::endl;
+
+	std::cout << "QUIT/EXIT | Closes the SQL console." << std::endl;
+	std::cout << "          | Example: QUIT;" << std::endl << std::endl;
+
+	std::cout << "EXIT      | Same as QUIT - exits the program." << std::endl;
+	std::cout << "          | Example: EXIT;" << std::endl << std::endl;
+
+	std::cout << "<========================================================================================>" << std::endl;
+}
+
 
 void errorHandler(int errorCode, std::string tableName = "")
 {
@@ -841,4 +886,63 @@ int SELECT(std::string instruction)
 	}
 
 	return 0;
+}
+
+std::string commander(std::string inputCommand, std::string instruction, bool& quit)
+{
+	std::string command = inputCommand;
+	///toUpper(command);
+	if (command == "CREATE")
+	{
+		CREATE(instruction);
+		return "CREATE";
+		///ex: return CREATE(instruction);
+	}
+	else if (command == "INSERT")
+	{
+		INSERT(instruction);
+		return "INSERT";
+	}
+	else if (command == "UPDATE")
+	{
+		UPDATE(instruction);
+		return "UPDATE";
+	}
+	else if (command == "DROP")
+	{
+		DROP(instruction);
+		return "DROP";
+	}
+	else if (command == "SELECT")
+	{
+		SELECT(instruction);
+		return "SELECT";
+	}
+	else if (command == "DELETE")
+	{
+		DELETE(instruction);
+		return "DELETE";
+	}
+	else if (command == "DISPLAY")
+	{
+		DISPLAY(instruction);
+		return "DISPLAY";
+	}
+	else if (command == "QUIT" or command == "EXIT")
+	{
+		quit = true;
+		return "QUIT";
+	}
+	else if (command == "INFO" or command == "HELP")
+	{
+		showCommands();
+		return "INFO";
+	}
+	else if (command == "CLEAR")
+	{
+		system("cls");
+		return "CLEAR";
+	}
+	std::cout << "UNKNOWN. Try inserting <HELP> for command manual!" << std::endl << std::endl;
+	return "UNKNOWN";
 }
