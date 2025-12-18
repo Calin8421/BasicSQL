@@ -38,6 +38,9 @@ void showCommands()
 	std::cout << "DISPLAY   | Shows the content of the current database or table (custom command)." << std::endl;
 	std::cout << "          | Example: DISPLAY employees;" << std::endl << std::endl;
 
+	std::cout << "RENAME    | Rename a table (custom command)." << std::endl;
+	std::cout << "          | Example: RENAME old_table_name TO new_table_name;" << std::endl << std::endl;
+
 	std::cout << "CLEAR     | Clears the screen or console output (custom shell command)." << std::endl;
 	std::cout << "          | Example: CLEAR;" << std::endl << std::endl;
 
@@ -887,6 +890,13 @@ int SELECT(std::string instruction)
 
 	return 0;
 }
+int RENAME(const std::string instruction)
+{
+	std::cout << instruction << std::endl;
+	std::cout << "Table renamed!" << std::endl;
+	return 0;
+}
+
 
 ///make this in to a int to return the error codes from the sql functions
 std::string commander(std::string inputCommand, std::string instruction, bool& quit)
@@ -928,6 +938,11 @@ std::string commander(std::string inputCommand, std::string instruction, bool& q
 	{
 		DISPLAY(instruction);
 		return "DISPLAY";
+	}
+	if (command == "RENAME")
+	{
+		RENAME(instruction);
+		return "RENAME";
 	}
 	else if (command == "QUIT" or command == "EXIT")
 	{

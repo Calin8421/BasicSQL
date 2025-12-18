@@ -9,4 +9,5 @@ int DROP(std::string);
 int DELETE(std::string);
 int DISPLAY(std::string);
 int SELECT(std::string);
+int RENAME(const std::string);
 std::string commander(std::string, std::string, bool&);
