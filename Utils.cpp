@@ -20,6 +20,8 @@ std::string primeToken(std::string instruction)
 
 }
 
+
+
 std::string restOfInstruction(std::string instruction) {
 	std::string instruct;
 	char* p = NULL;
