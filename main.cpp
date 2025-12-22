@@ -222,11 +222,10 @@ int sqlQueryConsole()
 	///:(
 	toUpper(userInput);
 	///toUpper
-	firstToken = primeToken(userInput);
-	userInstruction = restOfInstruction(userInput);
+
 	std::cout << std::endl;
 	bool quit = false;
-	commander(firstToken, userInstruction ,quit);
+	commander(primeToken(userInput), userInput ,quit);
 	if (!quit) sqlQueryConsole();
 
 	return 0;

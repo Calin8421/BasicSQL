@@ -230,6 +230,22 @@ int createColumn(std::string instruction, int source = 0)
 }
 
 ///FUNCTIONS FOR COMMAND INTERPRETER
+//ORDER:
+//1.FROM
+//2.WHERE
+//3 GROUP BY
+//4 HAVING
+//5 SELECT
+//6 DISTINCT  
+//7 ORDER BY
+
+//TODO .h file!!!!
+int SELECT(std::string instruction)
+{
+	std::cout << instruction<< std::endl;
+	return 0;
+}
+
 int INSERT(std::string instruction)
 {
 	const int intoSize = 4, valuesSize = 6;
@@ -742,154 +758,7 @@ int DISPLAY(std::string instruction)
 	}
 	return 0;
 }
-int SELECT(std::string instruction)
-{
-	removeSpaces(instruction);
-	bool isAll = false, isWhere = false, found = false;
-	int columnCount = 0;
-	std::string temp = "", column = "";
-	const int whereSize = 5;
 
-	if (instruction == "")
-	{
-		errorHandler(1);
-		return 1;
-	}
-
-	returnFirst(instruction, "ALL", temp);
-	if (temp != "-")
-	{
-		isAll = true;
-	}
-	if (instruction.find('(') == 0 && instruction.find(")") != -1 && isAll == false)
-	{
-		instruction = cut(instruction, 1);
-		returnFirst(instruction, ")", temp);
-		instruction = cut(instruction, temp.size() + 1);
-		removeSpaces(temp);
-		while (!temp.empty() && temp.find(',') != -1)
-		{
-			if (temp[0] == ',')
-			{
-				temp = cut(temp, 1);
-			}
-			removeSpaces(temp);
-			returnFirst(temp, ",", column);
-			temp = cut(temp, column.size());
-			if (temp[0] = ',')
-			{
-				temp = cut(temp, 1);
-			}
-			removeSpaces(column);
-			if (isValid(column))
-			{
-				std::cout << "\033[32m" << column << " \033[0m" << std::endl;
-				columnCount++;
-			}
-			else
-			{
-				errorHandler(16);
-				return 16;
-			}
-
-			removeSpaces(temp);
-		}
-		if (!temp.empty())
-		{
-			removeSpaces(temp);
-			if (isValid(temp))
-			{
-				std::cout << "\033[32m" << temp << " \033[0m" << std::endl;
-				columnCount++;
-			}
-			else
-			{
-				errorHandler(16);
-				return 16;
-			}
-		}
-	}
-	else if (isAll == false)
-	{
-		errorHandler(5);
-		return 5;
-	}
-
-	if (isAll == false && columnCount == 0)
-	{
-		errorHandler(17);
-		return 17;
-	}
-
-	if (isAll == true)
-	{
-		std::cout << "\033[32mIf this shows up it means that the ALL option is selected and all columns will be selected from the specified table \033[0m" << std::endl;
-	}
-
-	returnFirst(instruction, "FROM", temp);
-	instruction = cut(instruction, temp.size());
-	removeSpaces(temp);
-
-	if (temp == "-")
-	{
-		errorHandler(19);
-		return 19;
-	}
-	else if (!isValid(temp))
-	{
-		errorHandler(18);
-		return 18;
-	}
-	removeSpaces(instruction);
-	instruction = cut(instruction, 4);
-	removeSpaces(instruction);
-	if (instruction.find("WHERE") != -1)
-	{
-		isWhere = true;
-	}
-	if (isWhere == true)
-	{
-		returnFirst(instruction, "WHERE", temp);
-	}
-	else
-	{
-		temp = instruction;
-	}
-	instruction = cut(instruction, temp.size());
-	removeSpaces(temp);
-	if (isValid(temp) && temp != "-")
-	{
-		for (int i = 0; i < db.getTablesNo(); i++)
-		{
-			if (db.getTables()[i].getTableName() == temp)
-			{
-				found = true;
-			}
-		}
-		if (found == true)
-		{
-			std::cout << "From the table:\033[32m" << temp << "\033[0m" << std::endl;
-		}
-		else
-		{
-			errorHandler(15, temp);
-			return 15;
-		}
-	}
-	else
-	{
-		errorHandler(4);
-		return 4;
-	}
-	if (isWhere == true)
-	{
-		instruction = cut(instruction, whereSize);
-		removeSpaces(instruction);
-		std::cout << "The condition is:\033[32m " << instruction << std::endl << "\033[33mJust to mention this, any conditions are not verified yet therefor they will only be display for now, the program will not return an error even if the condition is wrong/there are more than 1/etc, this WILL be changed in the future\033[0m" "\033[0m" << std::endl;
-	}
-
-	return 0;
-}
 int RENAME(const std::string instruction)
 {
 	std::cout << instruction << std::endl;
@@ -899,62 +768,61 @@ int RENAME(const std::string instruction)
 
 
 ///make this in to a int to return the error codes from the sql functions
-std::string commander(std::string inputCommand, std::string instruction, bool& quit)
+std::string commander(const std::string token, std::string inputCommand, bool& quit)
 {
-	std::string command = inputCommand;
 	///toUpper(command);
-	if (command == "CREATE")
+	if (token == "CREATE")
 	{
-		CREATE(instruction);
+		
 		return "CREATE";
 		///ex: return CREATE(instruction);
 	}
-	else if (command == "INSERT")
+	else if (token == "INSERT")
 	{
-		INSERT(instruction);
+		
 		return "INSERT";
 	}
-	else if (command == "UPDATE")
+	else if (token == "UPDATE")
 	{
-		UPDATE(instruction);
+		
 		return "UPDATE";
 	}
-	else if (command == "DROP")
+	else if (token == "DROP")
 	{
-		DROP(instruction);
+		
 		return "DROP";
 	}
-	else if (command == "SELECT")
+	else if (token == "SELECT")
 	{
-		SELECT(instruction);
+		SELECT(inputCommand);
 		return "SELECT";
 	}
-	else if (command == "DELETE")
+	else if (token == "DELETE")
 	{
-		DELETE(instruction);
+		
 		return "DELETE";
 	}
-	else if (command == "DISPLAY")
+	else if (token == "DISPLAY")
 	{
-		DISPLAY(instruction);
+		
 		return "DISPLAY";
 	}
-	if (command == "RENAME")
+	if (token == "RENAME")
 	{
-		RENAME(instruction);
+		
 		return "RENAME";
 	}
-	else if (command == "QUIT" or command == "EXIT")
+	else if (token == "QUIT" or token == "EXIT")
 	{
 		quit = true;
 		return "QUIT";
 	}
-	else if (command == "INFO" or command == "HELP")
+	else if (token == "INFO" or token == "HELP")
 	{
 		showCommands();
 		return "INFO";
 	}
-	else if (command == "CLEAR")
+	else if (token == "CLEAR")
 	{
 		system("cls");
 		return "CLEAR";
