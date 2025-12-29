@@ -20,7 +20,24 @@ std::string primeToken(std::string instruction)
 
 }
 
-
+std::string tokenWithInstruction(const std::string instruction, const std::string firstToken, const std::string lastToken)
+{
+	std::string key;
+	char* p = NULL;
+	char* cstr = new char[instruction.length() + 1];
+	char* first_token_string = new char[firstToken.length() + 1];
+	char* last_token_string = new char[lastToken.length() + 1];
+	std::strcpy(cstr, instruction.c_str());
+	p = strtok(cstr, " ");
+	if (p != NULL)
+	{
+		
+	}
+	delete[] cstr;
+	delete[] first_token_string;
+	delete[] last_token_string;
+	
+}
 
 std::string restOfInstruction(std::string instruction) {
 	std::string instruct;
