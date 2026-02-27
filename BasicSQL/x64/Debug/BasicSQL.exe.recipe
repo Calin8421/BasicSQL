@@ -2,11 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-<<<<<<< HEAD
-      <FullPath>C:\Users\Mihai\source\repos\BasicSQL\x64\Debug\BasicSQL.exe</FullPath>
-=======
       <FullPath>F:\ASE\YEAR2\SEM 1\POO\Projects\BasicSQL\x64\Debug\BasicSQL.exe</FullPath>
->>>>>>> e7b9c7c (remaking sql commands, removed command RENAME and added ALTER)
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

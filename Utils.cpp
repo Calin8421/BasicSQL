@@ -36,7 +36,7 @@ std::string tokenWithInstruction(const std::string instruction, const std::strin
 	delete[] cstr;
 	delete[] first_token_string;
 	delete[] last_token_string;
-	
+	return key;
 }
 
 std::string restOfInstruction(std::string instruction) {
